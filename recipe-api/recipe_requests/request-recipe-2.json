@@ -1,0 +1,98 @@
+{
+    "recipe_name": "Minced Meat with Beans and Vegetables",
+    "ingredients": [
+        {
+            "amount": 400,
+            "unit": "GRAMS",
+            "ingredient_name": "Beef Mince"
+        },
+        {
+            "amount": 0.5,
+            "unit": "",
+            "ingredient_name": "Onion"
+        },
+        {
+            "amount": 1,
+            "unit": "",
+            "ingredient_name": "Carrot"
+        },
+        {
+            "amount": 100,
+            "unit": "GRAMS",
+            "ingredient_name": "Beans"
+        },
+        {
+            "amount": 0.5,
+            "unit": "TEASPOON",
+            "ingredient_name": "Garlic Paste"
+        },
+        {
+            "amount": 100,
+            "unit": "GRAMS",
+            "ingredient_name": "Frozen Vegetables"
+        },
+        {
+            "amount": 1,
+            "unit": "TABLESPOON",
+            "ingredient_name": "Corn Starch"
+        },
+        {
+            "amount": 0.5,
+            "unit": "",
+            "ingredient_name": "Beef Stock Cube"
+        },
+        {
+            "amount": 0.5,
+            "unit": "TEASPOON",
+            "ingredient_name": "Salt"
+        },
+        {
+            "amount": 0.5,
+            "unit": "TEASPOON",
+            "ingredient_name": "Black Pepper"
+        },
+        {
+            "amount": 0.5,
+            "unit": "TEASPOON",
+            "ingredient_name": "Aromat Spice (Chilli Beef)"
+        },
+        {
+            "amount": 0.5,
+            "unit": "TEASPOON",
+            "ingredient_name": "Grill Spice"
+        },
+        {
+            "amount": 0.5,
+            "unit": "CUP",
+            "ingredient_name": "Tomato Sauce"
+        },
+        {
+            "amount": 1,
+            "unit": "",
+            "ingredient_name": "Tomato"
+        },
+        {
+            "amount": 1,
+            "unit": "TABLESPOON",
+            "ingredient_name": "Sunflower Oil"
+        }
+    ],
+    "prep_time": 15,
+    "cook_time": 20,
+    "meal_type": "",
+    "servings": 3,
+    "nr_of_calories": 1265,
+    "instructions": [
+        "1. Cut the onion into smaller pieces.",
+        "2. Peel and grate the carrot.",
+        "3. Grate the tomato to use for the sauce.",
+        "4. Warm up the frozen vegetables.",
+        "5. Create a spice mix by blending the salt, black pepper, Aromat chilli beef spice and grill spice. ",
+        "6. Add the oil to a pan over medium-high heat. Once the pan is hot, add the beef and cook it until it browns.",
+        "7. Add the spice mix to the mince and stir it for a minute.",
+        "8. Add the onion and garlic to the pan and allow it to cook for about a minute.",
+        "9. Add the grated carrot to the pan and let it cook for another minute. Next, add the vegetables and beans to the pan and continue to stir and cook them for about 2 minutes.",
+        "10. Reduce the heat to medium and start creating the sauce by adding the grated tomato, tomato sauce and crushed beef stock cube to the pan. Let it bubble for 2 minutes while gradually add some boiled water and corn starch to change the thickness of the sauce.",
+        "11. Let it cook for another 3-5 minutes, or until the sauce is reduced and all the ingredients have fully cooked. Serve with pasta or rice."
+    ]
+}

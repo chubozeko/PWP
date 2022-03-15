@@ -1,0 +1,70 @@
+{
+    "recipe_name": "Mash",
+    "ingredients": [
+        {
+            "amount": 4,
+            "unit": "",
+            "ingredient_name": "Potato"
+        },
+        {
+            "amount": 2,
+            "unit": "",
+            "ingredient_name": "Egg"
+        },
+        {
+            "amount": 2,
+            "unit": "TABLESPOONS",
+            "ingredient_name": "Mayonnaise"
+        },
+        {
+            "amount": 1,
+            "unit": "TABLESPOON",
+            "ingredient_name": "Milk"
+        },
+        {
+            "amount": 0.5,
+            "unit": "TEASPOON",
+            "ingredient_name": "Butter"
+        },
+        {
+            "amount": 0.25,
+            "unit": "TEASPOON",
+            "ingredient_name": "Salt"
+        },
+        {
+            "amount": 0.25,
+            "unit": "TEASPOON",
+            "ingredient_name": "Black Pepper"
+        },
+        {
+            "amount": 0.25,
+            "unit": "TEASPOON",
+            "ingredient_name": "Aromat Spice (Chilli Beef)"
+        },
+        {
+            "amount": 0.25,
+            "unit": "TEASPOON",
+            "ingredient_name": "Gingerbread Spice"
+        },
+        {
+            "amount": 1,
+            "unit": "TABLESPOON",
+            "ingredient_name": "Sugar"
+        }
+    ],
+    "prep_time": 10,
+    "cook_time": 20,
+    "meal_type": "",
+    "servings": 1,
+    "nr_of_calories": 780,
+    "instructions": [
+        "1. Peel the potatoes and boil them for 20 minutes, or until they are soft.",
+        "2. Boil the eggs for 15 minutes.",
+        "3. Mash the potatoes and put them in a bowl.",
+        "4. Add the butter, milk and gingerbread spice to the mashed potatoes and mix them well.",
+        "5. Mash the eggs and add the salt, black pepper and Aromat spice.",
+        "6. Add the mashed eggs to the mashed potatoes and mix them well.",
+        "7. Add the mayonnaise and sugar to the bowl and mix them well.",
+        "8. Warm up the mash in the microwave if you wish to have it hot."
+    ]
+}
