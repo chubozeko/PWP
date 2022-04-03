@@ -103,6 +103,35 @@ For this section you can use a visual tool to generate a diagram. Be sure that t
 |amount|DOUBLE|NOT NULL|the amount of each ingredient|DEFAULT|none| 
 |unit|NVARCHAR|NOT NULL|the unit used for measure the amount of each ingredient|DEFAULT|none| 
 
+## Ingredient Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|ingredient_id|INT|NOT NULL|an ID for each ingredient to be used in any recipe|UNIQUE|primary| 
+|name|STRING|NOT NULL|name of the ingredient|DEFAULT|none|
+
+## User Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|user_id|INT|NOT NULL|an integer id that reference the creator of this recipe|UNIQUE|primary| 
+|username|STRING|NOT NULL|a string represnts the name of the user|DEFAULT|none|
+
+
+## Cookbook Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|cookbook_id|INT|NOT NULL|an id that represents the user cookbook|UNIQUE|primary|
+|name|STRING|NOT NULL|a string represents thar name of the user cookbook|DEFAULT|none|
+|user_id|INT|NOT NULL|an id that maps the cookbook id to the cookbook to its user id|UNIQUE|foreign links to the user table|
+
+## Collections Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|cookbook_id|INT|NOT NULL|an id of the user's cookbook|UNIQUE|foreign links to the cookbook table|
+|recipe_id|INT|NOT NULL|an ID for each recipe|UNIQUE|foriegn links to recipe table|
 
 :pencil2: *Do not forget to include a diagram presenting the relations*
 
