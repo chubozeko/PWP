@@ -1,0 +1,16 @@
+version: '3'
+services:
+  mysql-db:
+    container_name: pwp-mysql
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: pwp-2022
+    restart: always
+    ports:
+      - "127.0.0.1:5306:3306"
+
+networks:
+  default:
+    # external:
+      name: pwp

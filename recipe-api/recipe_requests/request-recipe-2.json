@@ -39,7 +39,7 @@
         {
             "amount": 0.5,
             "unit": "",
-            "ingredient_name": "Beef Stock Cube"
+            "ingredient_name": "Beef Stock"
         },
         {
             "amount": 0.5,
@@ -79,7 +79,7 @@
     ],
     "prep_time": 15,
     "cook_time": 20,
-    "meal_type": "",
+    "meal_type": "non-vegetarian",
     "servings": 3,
     "nr_of_calories": 1265,
     "instructions": [
