@@ -78,13 +78,60 @@ For this section you can use a visual tool to generate a diagram. Be sure that t
 ---
 
 :pencil2: *The table can have the following structure*
-
+## Recipe Table
 |**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
 |:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
 |Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
-||||||| 
-||||||| 
-||||||| 
+|recipe_id|INT|NOT NULL|unique id to each recipe created|UNIQUE|primary| 
+|recipe_name|STRING|NOT NULL|a string represents the name of the recipe|DEFAULT|none| 
+|prep_time|INT|NOT NULL|an integer represents the preperation time of the recipe|DEFAULT|none| 
+|cooking_time|INT|NOT NULL|an integer represents the cooking time of the recipe|DEFAULT|none| 
+|meal_type|STRING|NOT NULL|a string specifies the type of the meal|DEFAULT|none| 
+|calories|INT|NOT NULL|an integer represents the amount of calories that each recipe contains|DEFAULT|none| 
+|servings|INT|NOT NULL|an integer represents the number of servings for each meal|DEFAULT|none| 
+|instructions|STRING|NOT NULL|a string represents the instructions that should be followed to make the recipe|DEFAULT|none|  
+|creator_id|INT|NOT NULL|an integer links to the creator of this recipe|UNIQUE|foreign links to the User table| 
+
+
+## Recipe Ingredient Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|rec_ing_id|INT|NOT NULL|an ID for each ingredient used in to prepare the recipe|UNIQUE|primary| 
+|recipe_id|INT|NOT NULL|an ID for each recipe|UNIQUE|foreign links to the Recipe table| 
+|ingredient_id|INT|NOT NULL|an ID for each ingredient to be used in any recipe|UNIQUE|foreign links to the Ingredient table| 
+|amount|DOUBLE|NOT NULL|the amount of each ingredient|DEFAULT|none| 
+|unit|NVARCHAR|NOT NULL|the unit used for measure the amount of each ingredient|DEFAULT|none| 
+
+## Ingredient Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|ingredient_id|INT|NOT NULL|an ID for each ingredient to be used in any recipe|UNIQUE|primary| 
+|name|STRING|NOT NULL|name of the ingredient|DEFAULT|none|
+
+## User Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|user_id|INT|NOT NULL|an integer id that reference the creator of this recipe|UNIQUE|primary| 
+|username|STRING|NOT NULL|a string represnts the name of the user|DEFAULT|none|
+
+
+## Cookbook Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|cookbook_id|INT|NOT NULL|an id that represents the user cookbook|UNIQUE|primary|
+|name|STRING|NOT NULL|a string represents thar name of the user cookbook|DEFAULT|none|
+|user_id|INT|NOT NULL|an id that maps the cookbook id to the cookbook to its user id|UNIQUE|foreign links to the user table|
+
+## Collections Table
+|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|cookbook_id|INT|NOT NULL|an id of the user's cookbook|UNIQUE|foreign links to the cookbook table|
+|recipe_id|INT|NOT NULL|an ID for each recipe|UNIQUE|foriegn links to recipe table|
 
 :pencil2: *Do not forget to include a diagram presenting the relations*
 
