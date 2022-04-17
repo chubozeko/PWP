@@ -54,7 +54,7 @@ Once the MySQL database has been created, the database can be populated with som
 Each database entity has a subdirectory containing an SQL query that inserts data into their tables.
 
 ### Alternative Method: Create + Populate database
-You can run ``load_database.py``, which loads the database by creating and populating the database. 
+You can run ``load_database.py`` from the ``db`` directory, which loads the database by creating and populating the database. 
 This file loads the database using the database credentials defined in ``credentials.json`` which would be found in the ``db`` directory (Note: ``credentials.json`` is currently hidden in this repository for privacy reasons).
 ```commandline
 python load_database.py
