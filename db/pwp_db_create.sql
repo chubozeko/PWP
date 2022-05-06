@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `recipe` (
     `recipe_name` VARCHAR(50) NOT NULL,
     `prep_time` INT NOT NULL,
     `cooking_time` INT NOT NULL,
-    `meal_type` ENUM ('vegetarian', 'non-vegetarian', 'lactose-free') NOT NULL,
+    `meal_type` ENUM ('vegetarian', 'non-vegetarian', 'lactose-free') NULL,
     `calories` INT NOT NULL,
     `servings` INT NOT NULL,
     `instructions` VARCHAR(2000) NOT NULL,

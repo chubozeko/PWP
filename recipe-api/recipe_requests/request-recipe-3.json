@@ -43,10 +43,10 @@
         }
     ],
     "prep_time": 15,
-    "cook_time": 20,
+    "cooking_time": 20,
     "meal_type": "",
     "servings": 8,
-    "nr_of_calories": 657,
+    "calories": 657,
     "instructions": [
         "1. Boil the potatoes for about 20 minutes or until they are soft.",
         "2. Chop up the spring onion and lightly fry it for about 1 minute or before it darkens in colour.",
@@ -56,5 +56,6 @@
         "6. Add some oil to a pan over medium-high heat. ",
         "7. Once the pan is hot, add the patties and fry them until they are golden-brown. Try to flatten them as much as possible to allow them to cook in the centre.",
         "8. Once they are fried, set them aside to cool off before serving. Serve with sauces and chips."
-    ]
+    ],
+    "creator_id": 1
 }

@@ -78,10 +78,10 @@
         }
     ],
     "prep_time": 15,
-    "cook_time": 20,
+    "cooking_time": 20,
     "meal_type": "non-vegetarian",
     "servings": 3,
-    "nr_of_calories": 1265,
+    "calories": 1265,
     "instructions": [
         "1. Cut the onion into smaller pieces.",
         "2. Peel and grate the carrot.",
@@ -94,5 +94,6 @@
         "9. Add the grated carrot to the pan and let it cook for another minute. Next, add the vegetables and beans to the pan and continue to stir and cook them for about 2 minutes.",
         "10. Reduce the heat to medium and start creating the sauce by adding the grated tomato, tomato sauce and crushed beef stock cube to the pan. Let it bubble for 2 minutes while gradually add some boiled water and corn starch to change the thickness of the sauce.",
         "11. Let it cook for another 3-5 minutes, or until the sauce is reduced and all the ingredients have fully cooked. Serve with pasta or rice."
-    ]
+    ],
+    "creator_id": 1
 }

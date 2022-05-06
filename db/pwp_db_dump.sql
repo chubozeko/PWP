@@ -106,7 +106,7 @@ CREATE TABLE `recipe` (
   `recipe_name` varchar(50) NOT NULL,
   `prep_time` int NOT NULL,
   `cooking_time` int NOT NULL,
-  `meal_type` enum('vegetarian','non-vegetarian') NOT NULL,
+  `meal_type` enum('vegetarian','non-vegetarian') NULL,
   `calories` int NOT NULL,
   `servings` int NOT NULL,
   `instructions` varchar(2000) NOT NULL,

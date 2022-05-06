@@ -53,10 +53,10 @@
         }
     ],
     "prep_time": 10,
-    "cook_time": 20,
+    "cooking_time": 20,
     "meal_type": "non-vegetarian",
     "servings": 1,
-    "nr_of_calories": 780,
+    "calories": 780,
     "instructions": [
         "1. Peel the potatoes and boil them for 20 minutes, or until they are soft.",
         "2. Boil the eggs for 15 minutes.",
@@ -66,5 +66,6 @@
         "6. Add the mashed eggs to the mashed potatoes and mix them well.",
         "7. Add the mayonnaise and sugar to the bowl and mix them well.",
         "8. Warm up the mash in the microwave if you wish to have it hot."
-    ]
+    ],
+    "creator_id": 2
 }
