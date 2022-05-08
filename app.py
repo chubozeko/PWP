@@ -1,14 +1,18 @@
-import mysql.connector
-import json
 from flask import Flask, request, jsonify
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from pymysql import Error
 
-from db.load_database import MySQLDatabase
+from credentials import get_db_credentials
+from eathelp.db.load_database import MySQLDatabase
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:password@localhost/pwp_db"
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://" + \
+                                        get_db_credentials()["user"] + \
+                                        ":" + get_db_credentials()["password"] + \
+                                        "@" + get_db_credentials()["port"] + \
+                                        "/" + get_db_credentials()["database_name"]
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 api = Api(app)
 db = SQLAlchemy(app)

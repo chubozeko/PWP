@@ -3,21 +3,25 @@ import json
 import pymysql
 from pymysql import Error
 
+from credentials import get_db_credentials
+
+
 class MySQLDatabase:
     # Load database credentials
-    fd = open('db/credentials.json', 'r')
-    credentials = json.load(fd)
-    fd.close()
+    credentials = get_db_credentials()
+    # fd = open('db/credentials.json', 'r')
+    # credentials = json.load(fd)
+    # fd.close()
 
     def connect(self):
         conn = None
         # Connect to MySQL database
         try:
             conn = mysql.connector.connect(
-                host = self.credentials['dbCredentials']['host'],
-                port = str(self.credentials['dbCredentials']['port']),
-                user = self.credentials['dbCredentials']['user'],
-                passwd = self.credentials['dbCredentials']['password']
+                host = self.credentials['host'],
+                port = str(self.credentials['port']),
+                user = self.credentials['user'],
+                passwd = self.credentials['password']
             )
         except Error as e:
             print('Error: ', e)
