@@ -11,6 +11,11 @@ from eathelp.models import RecipeIngredient
 
 JSON = "application/json"
 
-# TODO: *RecipeIngredientItem
+# TODO: *RecipeIngredientItem [PWP-50]
+    # TODO: SQL Query to SELECT a RecipeIngredientItem [PWP-16]
+    # TODO: SQL Query to INSERT a RecipeIngredientItem [PWP-16]
+    # TODO: SQL Query to DELETE a RecipeIngredientItem [PWP-16]
 
-# TODO: *RecipeIngredientCollection
+# TODO: *RecipeIngredientCollection [PWP-50]
+    # TODO: SQL Query to SELECT a RecipeIngredientCollection [PWP-16]
+    # TODO: SQL Query to INSERT into a RecipeIngredientCollection [PWP-16]

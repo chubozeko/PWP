@@ -11,9 +11,10 @@ from eathelp.models import Recipe
 
 JSON = "application/json"
 
-# TODO: RecipeItem
+# TODO: RecipeItem [PWP-50]
 class RecipeItem(Resource):
     def get(self, recipe):
+        # TODO: SQL Query to SELECT a RecipeItem [PWP-16]
         body = recipe.serialize()
         return Response(json.dumps(body), 200, mimetype=JSON)
 
@@ -26,6 +27,7 @@ class RecipeItem(Resource):
         #     raise BadRequest(description=str(e))
         recipe.deserialize(request.json)
         try:
+            # TODO: SQL Query to INSERT a RecipeItem [PWP-16]
             db.session.add(recipe)
             db.session.commit()
         except IntegrityError:
@@ -37,14 +39,16 @@ class RecipeItem(Resource):
         return Response(status=204)
 
     def delete(self, recipe):
+        # TODO: SQL Query to DELETE a RecipeItem [PWP-16]
         db.session.delete(recipe)
         db.session.commit()
         return Response(status=204)
 
-# TODO: RecipeCollection
+# TODO: RecipeCollection [PWP-50]
 class RecipeCollection(Resource):
     def get(self):
         body = {"items": []}
+        # TODO: SQL Query to GET a RecipeCollection [PWP-16]
         for db_recipe in Recipe.query.all():
             item = db_recipe.serialize(short_form=True)
             body["items"].append(item)
@@ -60,6 +64,7 @@ class RecipeCollection(Resource):
         recipe = Recipe()
         recipe.deserialize(request.json)
         try:
+            # TODO: SQL Query to INSERT into a RecipeCollection [PWP-16]
             db.session.add(recipe)
             db.session.commit()
         except IntegrityError:

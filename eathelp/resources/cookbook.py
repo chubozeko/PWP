@@ -11,6 +11,11 @@ from eathelp.models import Cookbook
 
 JSON = "application/json"
 
-# TODO: CookbookItem
+# TODO: CookbookItem [PWP-50]
+    # TODO: SQL Query to SELECT a CookbookItem [PWP-16]
+    # TODO: SQL Query to INSERT a CookbookItem [PWP-16]
+    # TODO: SQL Query to DELETE a CookbookItem [PWP-16]
 
-# TODO: CookbookCollection
+# TODO: CookbookCollection [PWP-50]
+    # TODO: SQL Query to SELECT a CookbookCollection [PWP-16]
+    # TODO: SQL Query to INSERT into a CookbookCollection [PWP-16]

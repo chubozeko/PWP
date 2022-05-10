@@ -15,6 +15,20 @@ class User(db.Model):
     def deserialize(self, doc):
         self.username = doc["username"]
 
+    # TODO: Implement JSON schema for Models [PWP-17]
+    @staticmethod
+    def json_schema():
+        schema = {
+            "type": "object",
+            "required": [""]
+        }
+        props = schema["properties"] = {}
+        props[""] = {
+            "description": "",
+            "type": ""
+        }
+        return schema
+
 
 class Ingredient(db.Model):
     ingredient_id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -29,6 +43,20 @@ class Ingredient(db.Model):
 
     def deserialize(self, doc):
         self.name = doc["name"]
+
+    # TODO: Implement JSON schema for Models [PWP-17]
+    @staticmethod
+    def json_schema():
+        schema = {
+            "type": "object",
+            "required": [""]
+        }
+        props = schema["properties"] = {}
+        props[""] = {
+            "description": "",
+            "type": ""
+        }
+        return schema
 
 class Recipe(db.Model):
     recipe_id = db.Column(db.Integer, primary_key=True)
@@ -69,6 +97,19 @@ class Recipe(db.Model):
         self.instructions = doc["instructions"]
         self.user = doc["user"]
 
+    # TODO: Implement JSON schema for Models [PWP-17]
+    @staticmethod
+    def json_schema():
+        schema = {
+            "type": "object",
+            "required": [""]
+        }
+        props = schema["properties"] = {}
+        props[""] = {
+            "description": "",
+            "type": ""
+        }
+        return schema
 
 class RecipeIngredient(db.Model):
     rec_ing_id = db.Column(db.Integer, primary_key=True)
@@ -94,6 +135,20 @@ class RecipeIngredient(db.Model):
         self.ingredient = doc["ingredient"]
         self.recipe = doc["recipe"]
 
+    # TODO: Implement JSON schema for Models [PWP-17]
+    @staticmethod
+    def json_schema():
+        schema = {
+            "type": "object",
+            "required": [""]
+        }
+        props = schema["properties"] = {}
+        props[""] = {
+            "description": "",
+            "type": ""
+        }
+        return schema
+
 
 class Cookbook(db.Model):
     cookbook_id = db.Column(db.Integer, primary_key=True)
@@ -117,6 +172,20 @@ class Cookbook(db.Model):
         self.name = doc["name"]
         self.user = doc["user"]
         self.description = doc["description"]
+
+    # TODO: Implement JSON schema for Models [PWP-17]
+    @staticmethod
+    def json_schema():
+        schema = {
+            "type": "object",
+            "required": [""]
+        }
+        props = schema["properties"] = {}
+        props[""] = {
+            "description": "",
+            "type": ""
+        }
+        return schema
 
 class Collections(db.Model):
     cookbook_id = db.Column(db.Integer, db.ForeignKey("cookbook.cookbook_id", ondelete="SET NULL"))
