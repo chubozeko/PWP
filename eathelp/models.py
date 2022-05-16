@@ -1,8 +1,10 @@
-from eathelp import db
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    username = db.Column(db.String(255), nullable=False)
+    username = db.Column(db.String(255), unique=True, nullable=False)
 
     cookbooks = db.relationship("Cookbook", cascade="all, delete-orphan", back_populates="user")
     recipes = db.relationship("Recipe", cascade="all, delete-orphan", back_populates="user")
@@ -28,7 +30,6 @@ class User(db.Model):
             "type": ""
         }
         return schema
-
 
 class Ingredient(db.Model):
     ingredient_id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -60,7 +61,7 @@ class Ingredient(db.Model):
 
 class Recipe(db.Model):
     recipe_id = db.Column(db.Integer, primary_key=True)
-    recipe_name = db.Column(db.String(50), nullable=False)
+    recipe_name = db.Column(db.String(50), nullable=False, unique=True)
     prep_time = db.Column(db.Integer, nullable=False)
     cooking_time = db.Column(db.Integer, nullable=False)
     meal_type = db.Column(db.String(20), nullable=True)
@@ -75,8 +76,9 @@ class Recipe(db.Model):
 
     def serialize(self, short_form=False):
         doc = {
+            "recipe_id": self.recipe_id,
             "recipe_name": self.recipe_name,
-            "user": self.user and self.user.serialize()
+            "creator_id": self.creator_id # and self.user.serialize()
         }
         if not short_form:
             doc["prep_time"] = self.prep_time
@@ -95,7 +97,7 @@ class Recipe(db.Model):
         self.calories = doc["calories"]
         self.servings = doc["servings"]
         self.instructions = doc["instructions"]
-        self.user = doc["user"]
+        self.creator_id = doc["creator_id"]
 
     # TODO: Implement JSON schema for Models [PWP-17]
     @staticmethod
@@ -149,7 +151,6 @@ class RecipeIngredient(db.Model):
         }
         return schema
 
-
 class Cookbook(db.Model):
     cookbook_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -188,6 +189,7 @@ class Cookbook(db.Model):
         return schema
 
 class Collections(db.Model):
+    col_id = db.Column(db.Integer, primary_key=True)
     cookbook_id = db.Column(db.Integer, db.ForeignKey("cookbook.cookbook_id", ondelete="SET NULL"))
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.recipe_id", ondelete="SET NULL"))
 
