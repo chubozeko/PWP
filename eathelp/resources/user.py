@@ -1,78 +1,98 @@
 from flask import Flask, Response, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Resource, Api
+from flask_restful import Resource
 import json
 from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
 from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
 
-from eathelp import db
+from app import db_connection_mysql
 from eathelp.models import User
 
 JSON = "application/json"
 
-# TODO: UserItem [PWP-50]
+def parse_row(row):
+    return User(
+        user_id=row[0],
+        username=row[1]
+    )
+
+
 class UserItem(Resource):
     def get(self, chef):
-        # TODO: SQL Query to SELECT a UserItem [PWP-16]
-        body = chef.serialize()
+        conn = db_connection_mysql()
+        cursor = conn.cursor()
+        sql = "SELECT * FROM user WHERE user_id=" + str(chef)
+        cursor.execute(sql)
+        chefs = cursor.fetchall()
+        body = parse_row(chefs[0]).serialize()
         return Response(json.dumps(body), 200, mimetype=JSON)
 
     def put(self, chef):
+        conn = db_connection_mysql()
+        cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
+        # TODO: json_schema() validation [PWP-17]
         # try:
         #     validate(request.json, User.json_schema())
         # except ValidationError as e:
         #     raise BadRequest(description=str(e))
-        chef.deserialize(request.json)
+        c = User()
+        c.deserialize(request.json)
         try:
-            # TODO: SQL Query to INSERT a UserItem [PWP-16]
-            db.session.add(chef)
-            db.session.commit()
+            sql = """UPDATE user SET username = %s WHERE user_id = """ + str(chef)
+            cursor.execute(sql, (c.username, ))
+            conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Chef with name '{name}' already exists.".format(
+                "Chef with username '{username}' already exists.".format(
                     **request.json
                 )
             )
         return Response(status=204)
 
     def delete(self, chef):
-        # TODO: SQL Query to DELETE a UserItem [PWP-16]
-        db.session.delete(chef)
-        db.session.commit()
+        conn = db_connection_mysql()
+        cursor = conn.cursor()
+        sql = "DELETE FROM user WHERE user_id=" + str(chef)
+        cursor.execute(sql)
+        conn.commit()
         return Response(status=204)
 
-# TODO: UserCollection [PWP-50]
 class UserCollection(Resource):
     def get(self):
+        conn = db_connection_mysql()
+        cursor = conn.cursor()
+        sql = "SELECT * FROM user"
+        cursor.execute(sql)
+        chefs = cursor.fetchall()
         body = {"items": []}
-        # TODO: SQL Query to SELECT a UserCollection [PWP-16]
-        for db_chefs in User.query.all():
-            item = db_chefs.serialize(short_form=True)
+        for c in chefs:
+            item = parse_row(c).serialize()
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=JSON)
 
     def post(self):
+        conn = db_connection_mysql()
+        cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        try:
-            validate(request.json, User.json_schema())
-        except ValidationError as e:
-            raise BadRequest(description=str(e))
+        # TODO: json_schema() validation [PWP-17]
+        # try:
+        #     validate(request.json, User.json_schema())
+        # except ValidationError as e:
+        #     raise BadRequest(description=str(e))
         chef = User()
         chef.deserialize(request.json)
         try:
-            # TODO: SQL Query to INSERT into a UserCollection [PWP-16]
-            db.session.add(chef)
-            db.session.commit()
+            sql = """INSERT INTO user (username) VALUES (%s)"""
+            cursor.execute(sql, (chef.username, ))
+            conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Chef with name '{name}' already exists.".format(
+                "Chef with username '{username}' already exists.".format(
                     **request.json
                 )
             )
-        return Response(
-            status=201, headers={}
-        )
+        return Response(status=201, headers={})

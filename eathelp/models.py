@@ -11,6 +11,7 @@ class User(db.Model):
 
     def serialize(self):
         return {
+            "user_id": self.user_id,
             "username": self.username
         }
 
@@ -33,12 +34,13 @@ class User(db.Model):
 
 class Ingredient(db.Model):
     ingredient_id = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False, unique=True)
 
     recipe_ingredients = db.relationship("RecipeIngredient", cascade="all, delete-orphan", back_populates="ingredient")
 
     def serialize(self):
         return {
+            "ingredient_id": self.ingredient_id,
             "name": self.name
         }
 
@@ -125,17 +127,21 @@ class RecipeIngredient(db.Model):
 
     def serialize(self, short_form=False):
         return {
+            "id": self.rec_ing_id,
             "amount": self.amount,
             "unit": self.unit,
-            "ingredient": self.ingredient and self.ingredient.serialize(short_form=short_form),
-            "recipe": self.recipe and self.recipe.serialize(short_form=short_form)
+            "ingredient_id": self.ingredient_id,
+            "recipe_id": self.recipe_id,
+            # "name": self.ingredient and self.ingredient.serialize(short_form=short_form),
+            # "ingredient": self.ingredient and self.ingredient.serialize(short_form=short_form),
+            # "recipe": self.recipe and self.recipe.serialize(short_form=short_form)
         }
 
     def deserialize(self, doc):
         self.amount = doc["amount"]
         self.unit = doc["unit"]
-        self.ingredient = doc["ingredient"]
-        self.recipe = doc["recipe"]
+        self.ingredient_id = doc["ingredient_id"]
+        self.recipe_id = doc["recipe_id"]
 
     # TODO: Implement JSON schema for Models [PWP-17]
     @staticmethod
@@ -162,8 +168,9 @@ class Cookbook(db.Model):
 
     def serialize(self, short_form=False):
         doc = {
+            "cookbook_id": self.cookbook_id,
             "name": self.name,
-            "user": self.user and self.user.serialize()
+            "user_id": self.user_id
         }
         if not short_form:
             doc["description"] = self.description
@@ -171,8 +178,8 @@ class Cookbook(db.Model):
 
     def deserialize(self, doc):
         self.name = doc["name"]
-        self.user = doc["user"]
         self.description = doc["description"]
+        self.user_id = doc["user_id"]
 
     # TODO: Implement JSON schema for Models [PWP-17]
     @staticmethod

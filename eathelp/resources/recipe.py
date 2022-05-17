@@ -1,6 +1,6 @@
 from flask import Flask, Response, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_restful import Resource, Api
+from flask_restful import Resource
 import json
 from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
@@ -11,21 +11,21 @@ from app import db_connection_mysql
 
 JSON = "application/json"
 
-class RecipeItem(Resource):
-    def parse_row(self, row):
-        return Recipe(
-            recipe_id=row[0],
-            recipe_name=row[1],
-            prep_time=row[2],
-            cooking_time=row[3],
-            meal_type=row[4],
-            calories=row[5],
-            servings=row[6],
-            instructions=row[7],
-            creator_id=row[8]
-        )
+def parse_row(row):
+    return Recipe(
+        recipe_id=row[0],
+        recipe_name=row[1],
+        prep_time=row[2],
+        cooking_time=row[3],
+        meal_type=row[4],
+        calories=row[5],
+        servings=row[6],
+        instructions=row[7],
+        creator_id=row[8]
+    )
 
-    def get(self, chef, recipe):
+class RecipeItem(Resource):
+    def get(self, recipe, chef=None):
         conn = db_connection_mysql()
         cursor = conn.cursor()
         if chef is not None:
@@ -34,10 +34,10 @@ class RecipeItem(Resource):
             sql = "SELECT * FROM recipe WHERE recipe_id=" + str(recipe)
         cursor.execute(sql)
         recipes = cursor.fetchall()
-        body = self.parse_row(recipes[0]).serialize(short_form=False)
+        body = parse_row(recipes[0]).serialize(short_form=False)
         return Response(json.dumps(body), 200, mimetype=JSON)
 
-    def put(self, chef, recipe):
+    def put(self, recipe, chef=None):
         conn = db_connection_mysql()
         cursor = conn.cursor()
         if not request.json:
@@ -69,7 +69,7 @@ class RecipeItem(Resource):
             )
         return Response(status=204)
 
-    def delete(self, chef, recipe):
+    def delete(self, recipe, chef=None):
         conn = db_connection_mysql()
         cursor = conn.cursor()
         if chef is not None:
@@ -81,20 +81,7 @@ class RecipeItem(Resource):
         return Response(status=204)
 
 class RecipeCollection(Resource):
-    def parse_row(self, row):
-        return Recipe(
-            recipe_id=row[0],
-            recipe_name=row[1],
-            prep_time=row[2],
-            cooking_time=row[3],
-            meal_type=row[4],
-            calories=row[5],
-            servings=row[6],
-            instructions=row[7],
-            creator_id=row[8]
-        )
-
-    def get(self, chef):
+    def get(self, chef=None):
         conn = db_connection_mysql()
         cursor = conn.cursor()
         if chef is not None:
@@ -105,14 +92,13 @@ class RecipeCollection(Resource):
         recipes = cursor.fetchall()
         body = {"items": []}
         for r in recipes:
-            item = self.parse_row(r).serialize(short_form=True)
+            item = parse_row(r).serialize(short_form=True)
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=JSON)
 
-    def post(self, chef):
+    def post(self, chef=None):
         conn = db_connection_mysql()
         cursor = conn.cursor()
-
         if not request.json:
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
@@ -141,6 +127,4 @@ class RecipeCollection(Resource):
                     **request.json
                 )
             )
-        return Response(
-            status=201, headers={}
-        )
+        return Response(status=201, headers={})

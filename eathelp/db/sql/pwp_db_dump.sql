@@ -81,7 +81,7 @@ DROP TABLE IF EXISTS `ingredient`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ingredient` (
   `ingredient_id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci UNIQUE NOT NULL,
   PRIMARY KEY (`ingredient_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

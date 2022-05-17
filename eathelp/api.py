@@ -17,7 +17,7 @@ api.add_resource(CookbookItem, "/chefs/<chef>/cookbooks/<int:cookbook>")    # "/
 api.add_resource(RecipeCollection, "/chefs/<int:chef>/recipes/", "/recipes/")
 api.add_resource(RecipeItem, "/chefs/<int:chef>/recipes/<int:recipe>", "/recipes/<int:recipe>")
 api.add_resource(RecipeIngredientCollection, "/recipes/<int:recipe>/ingredients/")
-api.add_resource(RecipeIngredientItem, "/recipes/<int:recipe>/ingredients/<int:ingredient>")
+api.add_resource(RecipeIngredientItem, "/recipes/<int:recipe>/ingredients/<int:r_ingredient>")
 api.add_resource(IngredientCollection, "/ingredients/")
 api.add_resource(IngredientItem, "/ingredients/<int:ingredient>")
 
