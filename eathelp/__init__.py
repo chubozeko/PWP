@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from credentials import get_db_credentials
 from eathelp.api import api
@@ -32,4 +33,5 @@ def create_app(test_config=None):
 
     db.init_app(app)
     app.register_blueprint(api.blueprint)
+    CORS(app)
     return app
