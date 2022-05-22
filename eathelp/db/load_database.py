@@ -19,7 +19,7 @@ def db_connection_mysql():
 def initialize_db_cursor(conn):
     try:
         cursor = conn.cursor()
-        cursor.execute("USE pwp_db")
+        cursor.execute("USE " + get_db_credentials()["database_name"])
     except Error as e:
         print('Error: ', e)
     except Exception as e:
@@ -50,7 +50,7 @@ class MySQLDatabase:
     def initialize(self, connection, init_db: bool):
         # Initialize DB cursor
         db_cursor = connection.cursor()
-        db_cursor.execute("USE pwp_db;")
+        db_cursor.execute("USE " + get_db_credentials()["database_name"])
         db_cursor.execute("SET foreign_key_checks = 0;")
         # Initialize DB from SQL
         if init_db:
