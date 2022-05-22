@@ -1,0 +1,22 @@
+{
+  "ingredients": [
+    {
+      "amount": 0,
+      "unit": "",
+      "ingredient_id": 0,
+      "recipe_id": 0
+    },
+    {
+      "amount": 0,
+      "unit": "",
+      "ingredient_id": 0,
+      "recipe_id": 0
+    },
+    {
+      "amount": 0,
+      "unit": "",
+      "ingredient_id": 0,
+      "recipe_id": 0
+    }
+  ]
+}

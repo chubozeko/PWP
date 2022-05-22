@@ -1,0 +1,44 @@
+{
+  "ingredients": [
+    {
+      "amount": 2,
+      "unit": "",
+      "ingredient_name": "Potato"
+    },
+    {
+      "amount": 100,
+      "unit": "GRAMS",
+      "ingredient_name": "Tuna"
+    },
+    {
+      "amount": 0.5,
+      "unit": "TEASPOON",
+      "ingredient_name": "Salt"
+    },
+    {
+      "amount": 1,
+      "unit": "TEASPOON",
+      "ingredient_name": "Black Pepper"
+    },
+    {
+      "amount": 1,
+      "unit": "",
+      "ingredient_name": "Egg Yolk"
+    },
+    {
+      "amount": 1,
+      "unit": "TABLESPOON",
+      "ingredient_name": "Corn Starch"
+    },
+    {
+      "amount": 100,
+      "unit": "GRAMS",
+      "ingredient_name": "Spring Onion"
+    },
+    {
+      "amount": 0.5,
+      "unit": "TEASPOON",
+      "ingredient_name": "Basil"
+    }
+  ]
+}

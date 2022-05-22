@@ -7,68 +7,69 @@ from pymysql import IntegrityError
 from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
 
 from eathelp.db.load_database import db_connection_mysql
-from eathelp.models import Ingredient
+from eathelp.models import User
 
 JSON = "application/json"
 
 def parse_row(row):
-    return Ingredient(
-        ingredient_id=row[0],
-        name=row[1]
+    return User(
+        user_id=row[0],
+        username=row[1]
     )
 
-class IngredientItem(Resource):
-    def get(self, ingredient):
+
+class UserItem(Resource):
+    def get(self, chef):
         conn = db_connection_mysql()
         cursor = conn.cursor()
-        sql = "SELECT * FROM ingredient WHERE ingredient_id=" + str(ingredient)
+        sql = "SELECT * FROM user WHERE user_id=" + str(chef)
         cursor.execute(sql)
-        ingredients = cursor.fetchall()
-        body = parse_row(ingredients[0]).serialize()
+        chefs = cursor.fetchall()
+        body = parse_row(chefs[0]).serialize()
         return Response(json.dumps(body), 200, mimetype=JSON)
 
-    def put(self, ingredient):
+    def put(self, chef):
         conn = db_connection_mysql()
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
         # try:
-        #     validate(request.json, Ingredient.json_schema())
+        #     validate(request.json, User.json_schema())
         # except ValidationError as e:
         #     raise BadRequest(description=str(e))
-        i = Ingredient()
-        i.deserialize(request.json)
+        c = User()
+        c.deserialize(request.json)
         try:
-            sql = """UPDATE ingredient SET name = %s WHERE ingredient_id = """ + str(ingredient)
-            cursor.execute(sql, (i.name,))
+            sql = """UPDATE user SET username = %s WHERE user_id = """ + str(chef)
+            cursor.execute(sql, (c.username, ))
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Ingredient with name '{name}' already exists.".format(
+                "Chef with username '{username}' already exists.".format(
                     **request.json
                 )
             )
         return Response(status=204)
 
-    def delete(self, ingredient):
+    def delete(self, chef):
         conn = db_connection_mysql()
         cursor = conn.cursor()
-        sql = "DELETE FROM ingredient WHERE ingredient_id=" + str(ingredient)
+        sql = "DELETE FROM user WHERE user_id=" + str(chef)
         cursor.execute(sql)
         conn.commit()
         return Response(status=204)
 
-class IngredientCollection(Resource):
+class UserCollection(Resource):
     def get(self):
         conn = db_connection_mysql()
         cursor = conn.cursor()
-        sql = "SELECT * FROM ingredient"
+        sql = "SELECT * FROM user"
         cursor.execute(sql)
-        ingredients = cursor.fetchall()
+        chefs = cursor.fetchall()
         body = {"items": []}
-        for i in ingredients:
-            item = parse_row(i).serialize()
+        for c in chefs:
+            item = parse_row(c).serialize()
             body["items"].append(item)
         return Response(json.dumps(body), 200, mimetype=JSON)
 
@@ -79,18 +80,18 @@ class IngredientCollection(Resource):
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
         # try:
-        #     validate(request.json, Ingredient.json_schema())
+        #     validate(request.json, User.json_schema())
         # except ValidationError as e:
         #     raise BadRequest(description=str(e))
-        ingredient = Ingredient()
-        ingredient.deserialize(request.json)
+        chef = User()
+        chef.deserialize(request.json)
         try:
-            sql = """INSERT INTO ingredient (name) VALUES (%s)"""
-            cursor.execute(sql, (ingredient.name,))
+            sql = """INSERT INTO user (username) VALUES (%s)"""
+            cursor.execute(sql, (chef.username, ))
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Ingredient with name '{name}' already exists.".format(
+                "Chef with username '{username}' already exists.".format(
                     **request.json
                 )
             )
