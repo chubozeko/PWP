@@ -6,7 +6,7 @@ from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
 from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
 
-from app import db_connection_mysql
+from eathelp.db.load_database import db_connection_mysql
 from eathelp.models import Ingredient
 
 JSON = "application/json"

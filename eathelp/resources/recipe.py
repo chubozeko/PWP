@@ -7,7 +7,7 @@ from pymysql import IntegrityError
 from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
 
 from eathelp.models import Recipe
-from app import db_connection_mysql
+from eathelp.db.load_database import db_connection_mysql
 
 JSON = "application/json"
 

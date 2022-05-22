@@ -1,17 +1,35 @@
 import mysql.connector
-import json
-import pymysql
 from pymysql import Error
 
 from credentials import get_db_credentials
+
+def db_connection_mysql():
+    conn = None
+    try:
+        # Connect to MySQL database
+        mysql_db = MySQLDatabase()
+        conn = mysql_db.connect()
+        mysql_db.initialize(conn, False)
+    except Error as e:
+        print('Error: ', e)
+    except Exception as e:
+        print('Exception: ', e)
+    return conn
+
+def initialize_db_cursor(conn):
+    try:
+        cursor = conn.cursor()
+        cursor.execute("USE pwp_db")
+    except Error as e:
+        print('Error: ', e)
+    except Exception as e:
+        print('Exception: ', e)
+    return cursor
 
 
 class MySQLDatabase:
     # Load database credentials
     credentials = get_db_credentials()
-    # fd = open('db/credentials.json', 'r')
-    # credentials = json.load(fd)
-    # fd.close()
 
     def connect(self):
         conn = None
@@ -40,14 +58,14 @@ class MySQLDatabase:
             # db_cursor.execute("SET foreign_key_checks = 1;")
             self.executeSql('pwp_db_insert.sql', db_cursor)
 
-    def executeSql(self, sqlFile, db_cursor):
-        fd = open(sqlFile, 'r')
-        sql_db_create = fd.read()
-        fd.close()
-        sqlCmds = sql_db_create.split(';')
-        for command in sqlCmds:
-            try:
-                db_cursor.fetchall()
-                db_cursor.execute(command)
-            except ():
-                print("Command skipped: ")
+    # def executeSql(self, sqlFile, db_cursor):
+    #     fd = open(sqlFile, 'r')
+    #     sql_db_create = fd.read()
+    #     fd.close()
+    #     sqlCmds = sql_db_create.split(';')
+    #     for command in sqlCmds:
+    #         try:
+    #             db_cursor.fetchall()
+    #             db_cursor.execute(command)
+    #         except ():
+    #             print("Command skipped: ")
