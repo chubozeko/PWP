@@ -16,7 +16,6 @@ cryptography==36.0.2
 cymem==2.0.6
 Django==4.0.4
 -e git+https://github.com/chubozeko/PWP.git@6526cc9370376f5d3c5af537fd3e1f8330ab23bd#egg=eathelp
-en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.1.0/en_core_web_sm-3.1.0-py3-none-any.whl
 Flask==2.0.2
 Flask-Caching==1.10.1
 Flask-Cors==3.0.10
