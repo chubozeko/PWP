@@ -23,12 +23,12 @@ class User(db.Model):
     def json_schema():
         schema = {
             "type": "object",
-            "required": [""]
+            "required": ["username"]
         }
         props = schema["properties"] = {}
-        props[""] = {
-            "description": "",
-            "type": ""
+        props["username"] = {
+            "description": "the user's name",
+            "type": "string"
         }
         return schema
 
@@ -52,12 +52,12 @@ class Ingredient(db.Model):
     def json_schema():
         schema = {
             "type": "object",
-            "required": [""]
+            "required": ["name"]
         }
         props = schema["properties"] = {}
-        props[""] = {
-            "description": "",
-            "type": ""
+        props["name"] = {
+            "description": "the ingredient's name",
+            "type": "string"
         }
         return schema
 
@@ -106,12 +106,42 @@ class Recipe(db.Model):
     def json_schema():
         schema = {
             "type": "object",
-            "required": [""]
+            "required": ["recipe_name",
+                         "prep_time",
+                         "cooking_time",
+                         "meal_type",
+                         "calories",
+                         "servings",
+                         "instructions"]
         }
         props = schema["properties"] = {}
-        props[""] = {
-            "description": "",
-            "type": ""
+        props["recipe_name"] = {
+            "description": "recipe's name",
+            "type": "string"
+        }
+        props["prep_time"] = {
+            "description": "preperation time",
+            "type": "number"
+        }
+        props["cooking_time"] = {
+            "description": "cooking time",
+            "type": "number"
+        }
+        props["meal_type"] = {
+            "description": "type of the meal",
+            "type": "string"
+        }
+        props["calories"] = {
+            "description": "calories in the meal",
+            "type": "number"
+        }
+        props["servings"] = {
+            "description": "number of servings per meal",
+            "type": "number"
+        }
+        props["instructions"] = {
+            "description": "instsructions to prepare the meal",
+            "type": "string"
         }
         return schema
 
@@ -148,12 +178,16 @@ class RecipeIngredient(db.Model):
     def json_schema():
         schema = {
             "type": "object",
-            "required": [""]
+            "required": ["amount", "unit"]
         }
         props = schema["properties"] = {}
-        props[""] = {
-            "description": "",
-            "type": ""
+        props["amount"] = {
+            "description": "amount of each ingredient",
+            "type": "number"
+        }
+        props["unit"] = {
+            "description": "measurement unit for the ingredient",
+            "type": "string"
         }
         return schema
 
@@ -186,12 +220,16 @@ class Cookbook(db.Model):
     def json_schema():
         schema = {
             "type": "object",
-            "required": [""]
+            "required": ["name","description"]
         }
         props = schema["properties"] = {}
-        props[""] = {
-            "description": "",
-            "type": ""
+        props["name"] = {
+            "description": "cookbook's name",
+            "type": "string"
+        }
+        props["description"] = {
+            "description": "cookbook description",
+            "type": "string"
         }
         return schema
 
