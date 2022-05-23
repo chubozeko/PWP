@@ -33,10 +33,10 @@ class IngredientItem(Resource):
         if not request.json:
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
-        # try:
-        #     validate(request.json, Ingredient.json_schema())
-        # except ValidationError as e:
-        #     raise BadRequest(description=str(e))
+        try:
+            validate(request.json, Ingredient.json_schema())
+        except ValidationError as e:
+            raise BadRequest(description=str(e))
         i = Ingredient()
         i.deserialize(request.json)
         try:
@@ -78,10 +78,10 @@ class IngredientCollection(Resource):
         if not request.json:
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
-        # try:
-        #     validate(request.json, Ingredient.json_schema())
-        # except ValidationError as e:
-        #     raise BadRequest(description=str(e))
+        try:
+            validate(request.json, Ingredient.json_schema())
+        except ValidationError as e:
+            raise BadRequest(description=str(e))
         ingredient = Ingredient()
         ingredient.deserialize(request.json)
         try:

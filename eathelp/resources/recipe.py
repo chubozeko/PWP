@@ -43,10 +43,10 @@ class RecipeItem(Resource):
         if not request.json:
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
-        # try:
-        #     validate(request.json, Recipe.json_schema())
-        # except ValidationError as e:
-        #     raise BadRequest(description=str(e))
+        try:
+            validate(request.json, Recipe.json_schema())
+        except ValidationError as e:
+            raise BadRequest(description=str(e))
         r = Recipe()
         r.deserialize(request.json)
         try:
@@ -102,10 +102,10 @@ class RecipeCollection(Resource):
         if not request.json:
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
-        # try:
-        #     validate(request.json, Recipe.json_schema())
-        # except ValidationError as e:
-        #     raise BadRequest(description=str(e))
+        try:
+            validate(request.json, Recipe.json_schema())
+        except ValidationError as e:
+            raise BadRequest(description=str(e))
         recipe = Recipe()
         recipe.deserialize(request.json)
         try:
