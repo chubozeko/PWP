@@ -6,6 +6,8 @@ from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
 from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
 
+from eathelp import cache
+from eathelp.api import api
 from eathelp.db.load_database import db_connection_mysql
 from eathelp.models import Ingredient
 
@@ -18,6 +20,7 @@ def parse_row(row):
     )
 
 class IngredientItem(Resource):
+    @cache.cached()
     def get(self, ingredient):
         conn = db_connection_mysql()
         cursor = conn.cursor()
@@ -42,6 +45,7 @@ class IngredientItem(Resource):
             sql = """UPDATE ingredient SET name = %s WHERE ingredient_id = """ + str(ingredient)
             cursor.execute(sql, (i.name,))
             conn.commit()
+            self._clear_cache()
         except IntegrityError:
             raise Conflict(
                 "Ingredient with name '{name}' already exists.".format(
@@ -56,7 +60,15 @@ class IngredientItem(Resource):
         sql = "DELETE FROM ingredient WHERE ingredient_id=" + str(ingredient)
         cursor.execute(sql)
         conn.commit()
+        self._clear_cache()
         return Response(status=204)
+
+    def _clear_cache(self):
+        ic_path = api.url_for(IngredientCollection)
+        cache.delete_many((
+            ic_path,
+            request.path,
+        ))
 
 class IngredientCollection(Resource):
     def get(self):

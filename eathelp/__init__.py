@@ -2,10 +2,12 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+from flask_caching import Cache
 from credentials import get_db_credentials
 from eathelp.api import api
 
 db = SQLAlchemy()
+cache = Cache()
 
 # Based on http://flask.pocoo.org/docs/1.0/tutorial/factory/#the-application-factory
 # Modified to use Flask SQLAlchemy
@@ -23,6 +25,8 @@ def create_app(test_config=None):
                                                 get_db_credentials()["query_params"],
         SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
+    app.config["CACHE_TYPE"] = "SimpleCache"
+    app.config["CACHE_DIR"] = os.path.join(app.instance_path, "cache")
 
     if test_config is None:
         app.config.from_pyfile("config.py", silent=True)
@@ -35,6 +39,7 @@ def create_app(test_config=None):
         pass
 
     db.init_app(app)
+    cache.init_app(app)
     app.register_blueprint(api.blueprint)
     CORS(app)
     return app
