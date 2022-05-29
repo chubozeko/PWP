@@ -35,10 +35,10 @@ class UserItem(Resource):
         if not request.json:
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
-        # try:
-        #     validate(request.json, User.json_schema())
-        # except ValidationError as e:
-        #     raise BadRequest(description=str(e))
+        try:
+            validate(request.json, User.json_schema())
+        except ValidationError as e:
+            raise BadRequest(description=str(e))
         c = User()
         c.deserialize(request.json)
         try:
@@ -80,10 +80,10 @@ class UserCollection(Resource):
         if not request.json:
             raise UnsupportedMediaType
         # TODO: json_schema() validation [PWP-17]
-        # try:
-        #     validate(request.json, User.json_schema())
-        # except ValidationError as e:
-        #     raise BadRequest(description=str(e))
+        try:
+            validate(request.json, User.json_schema())
+        except ValidationError as e:
+            raise BadRequest(description=str(e))
         chef = User()
         chef.deserialize(request.json)
         try:
