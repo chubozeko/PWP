@@ -32,7 +32,6 @@ class IngredientItem(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, Ingredient.json_schema())
         except ValidationError as e:
@@ -77,7 +76,6 @@ class IngredientCollection(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, Ingredient.json_schema())
         except ValidationError as e:
@@ -90,8 +88,6 @@ class IngredientCollection(Resource):
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Ingredient with name '{name}' already exists.".format(
-                    **request.json
-                )
+                "Ingredient with the name '{name}' already exists.".format(**request.json)
             )
         return Response(status=201, headers={})

@@ -18,7 +18,6 @@ class User(db.Model):
     def deserialize(self, doc):
         self.username = doc["username"]
 
-    # TODO: Implement JSON schema for Models [PWP-17]
     @staticmethod
     def json_schema():
         schema = {
@@ -27,7 +26,7 @@ class User(db.Model):
         }
         props = schema["properties"] = {}
         props["username"] = {
-            "description": "the user's name",
+            "description": "The chef's unique username",
             "type": "string"
         }
         return schema
@@ -47,7 +46,6 @@ class Ingredient(db.Model):
     def deserialize(self, doc):
         self.name = doc["name"]
 
-    # TODO: Implement JSON schema for Models [PWP-17]
     @staticmethod
     def json_schema():
         schema = {
@@ -56,7 +54,7 @@ class Ingredient(db.Model):
         }
         props = schema["properties"] = {}
         props["name"] = {
-            "description": "the ingredient's name",
+            "description": "The ingredient's name",
             "type": "string"
         }
         return schema
@@ -101,51 +99,54 @@ class Recipe(db.Model):
         self.instructions = doc["instructions"]
         self.creator_id = doc["creator_id"]
 
-    # TODO: Implement JSON schema for Models [PWP-17]
     @staticmethod
     def json_schema():
         schema = {
             "type": "object",
-            "required": ["recipe_name",
-                         "prep_time",
-                         "cooking_time",
-                         "meal_type",
-                         "calories",
-                         "servings",
-                         "instructions"]
+            "required": ["recipe_name", "prep_time", "cooking_time", "meal_type",
+                         "calories", "servings", "instructions", "ingredients"]
         }
         props = schema["properties"] = {}
         props["recipe_name"] = {
-            "description": "recipe's name",
+            "description": "Name of the recipe",
             "type": "string"
         }
         props["prep_time"] = {
-            "description": "preperation time",
+            "description": "Time required to prepare the meal (in minutes)",
             "type": "number"
         }
         props["cooking_time"] = {
-            "description": "cooking time",
+            "description": "Time required to cook the meal (in minutes)",
             "type": "number"
         }
         props["meal_type"] = {
-            "description": "type of the meal",
+            "description": "The type of meal",
             "type": "string"
         }
         props["calories"] = {
-            "description": "calories in the meal",
+            "description": "The amount of calories in the meal",
             "type": "number"
         }
         props["servings"] = {
-            "description": "number of servings per meal",
+            "description": "The number of servings that the recipe produces",
             "type": "number"
         }
         props["instructions"] = {
-            "description": "instsructions to prepare the meal",
-            "type": "string"
+            "description": "The steps taken to prepare the meal",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+        props["ingredients"] = {
+            "description": "The ingredients used in the recipe",
+            "type": "array"
         }
         return schema
 
 class RecipeIngredient(db.Model):
+    __table_args__ = (db.UniqueConstraint("recipe_id", "ingredient_id", name="_ingredient_in_recipe_uc"),)
+
     rec_ing_id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.recipe_id", ondelete="SET NULL"))
     ingredient_id = db.Column(db.Integer, db.ForeignKey("ingredient.ingredient_id", ondelete="SET NULL"))
@@ -173,25 +174,34 @@ class RecipeIngredient(db.Model):
         self.ingredient_id = doc["ingredient_id"]
         self.recipe_id = doc["recipe_id"]
 
-    # TODO: Implement JSON schema for Models [PWP-17]
     @staticmethod
     def json_schema():
         schema = {
             "type": "object",
-            "required": ["amount", "unit"]
+            "required": ["amount", "unit", "ingredient_id", "recipe_id"]
         }
         props = schema["properties"] = {}
         props["amount"] = {
-            "description": "amount of each ingredient",
+            "description": "The measurable amount of the ingredient",
             "type": "number"
         }
         props["unit"] = {
-            "description": "measurement unit for the ingredient",
+            "description": "The measuring unit for the ingredient (e.g. grams, ml, teaspoons, etc.)",
             "type": "string"
+        }
+        props["ingredient_id"] = {
+            "description": "The ID of the ingredient used",
+            "type": "number"
+        }
+        props["recipe_id"] = {
+            "description": "The ID of the recipe where the ingredient is used",
+            "type": "number"
         }
         return schema
 
 class Cookbook(db.Model):
+    __table_args__ = (db.UniqueConstraint("name", "user_id", name="_user_cb_name_uc"),)
+
     cookbook_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200), nullable=False)
@@ -215,22 +225,25 @@ class Cookbook(db.Model):
         self.description = doc["description"]
         self.user_id = doc["user_id"]
 
-    # TODO: Implement JSON schema for Models [PWP-17]
     @staticmethod
     def json_schema():
         schema = {
             "type": "object",
-            "required": ["name","description"]
+            "required": ["name", "description"]
         }
         props = schema["properties"] = {}
         props["name"] = {
-            "description": "cookbook's name",
+            "description": "Name of the cookbook",
             "type": "string"
         }
         props["description"] = {
-            "description": "cookbook description",
+            "description": "The description of the cookbook",
             "type": "string"
         }
+        # props["user_id"] = {
+        #     "description": "The ID of the cookbook's creator",
+        #     "type": "number"
+        # }
         return schema
 
 class Collections(db.Model):

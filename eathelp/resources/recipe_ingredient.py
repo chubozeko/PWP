@@ -37,7 +37,6 @@ class RecipeIngredientItem(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, RecipeIngredient.json_schema())
         except ValidationError as e:
@@ -51,9 +50,7 @@ class RecipeIngredientItem(Resource):
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Recipe Ingredient with id '{rec_ing_id}' already exists.".format(
-                    **request.json
-                )
+                "Ingredient with id '{rec_ing_id}' already exists in Recipe {recipe_id}.".format(**request.json)
             )
         return Response(status=204)
 
@@ -87,44 +84,43 @@ class RecipeIngredientCollection(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, RecipeIngredient.json_schema())
         except ValidationError as e:
             raise BadRequest(description=str(e))
+        # try:
+        #     # POSTing an array of RecipeIngredient Items
+        #     for ing in request.json['ingredients']:
+        #         r_ingredient = RecipeIngredient()
+        #         r_ingredient.deserialize(ing)
+        #         try:
+        #             sql = """INSERT INTO recipe_ingredient
+        #                                 (recipe_id, ingredient_id, amount, unit)
+        #                                 VALUES (%s,%s,%s,%s)"""
+        #             cursor.execute(sql, (str(recipe), r_ingredient.ingredient_id, r_ingredient.amount, r_ingredient.unit,))
+        #         except IntegrityError:
+        #             raise Conflict(
+        #                 "Recipe Ingredient with id '{rec_ing_id}' already exists.".format(
+        #                     **request.json
+        #                 )
+        #             )
+        #     conn.commit()
+        #     return Response(status=201, headers={})
+        # except KeyError:
+        # POSTing a singular RecipeIngredient Item
+        r_ingredient = RecipeIngredient()
+        r_ingredient.deserialize(request.json)
         try:
-            # POSTing an array of RecipeIngredient Items
-            for ing in request.json['ingredients']:
-                r_ingredient = RecipeIngredient()
-                r_ingredient.deserialize(ing)
-                try:
-                    sql = """INSERT INTO recipe_ingredient 
-                                        (recipe_id, ingredient_id, amount, unit) 
-                                        VALUES (%s,%s,%s,%s)"""
-                    cursor.execute(sql, (str(recipe), r_ingredient.ingredient_id, r_ingredient.amount, r_ingredient.unit,))
-                except IntegrityError:
-                    raise Conflict(
-                        "Recipe Ingredient with id '{rec_ing_id}' already exists.".format(
-                            **request.json
-                        )
-                    )
+            sql = """INSERT INTO recipe_ingredient 
+                                (recipe_id, ingredient_id, amount, unit) 
+                                VALUES (%s,%s,%s,%s)"""
+            cursor.execute(sql, (str(recipe), r_ingredient.ingredient_id, r_ingredient.amount, r_ingredient.unit,))
             conn.commit()
-            return Response(status=201, headers={})
-        except KeyError:
-            # POSTing a singular RecipeIngredient Item
-            r_ingredient = RecipeIngredient()
-            r_ingredient.deserialize(request.json)
-            try:
-                sql = """INSERT INTO recipe_ingredient 
-                                    (recipe_id, ingredient_id, amount, unit) 
-                                    VALUES (%s,%s,%s,%s)"""
-                cursor.execute(sql, (str(recipe), r_ingredient.ingredient_id, r_ingredient.amount, r_ingredient.unit,))
-                conn.commit()
-            except IntegrityError:
-                raise Conflict(
-                    "Recipe Ingredient with id '{rec_ing_id}' already exists.".format(
-                        **request.json
-                    )
+        except IntegrityError:
+            raise Conflict(
+                "Recipe Ingredient with id '{rec_ing_id}' already exists.".format(
+                    **request.json
                 )
-            return Response(status=201, headers={})
+            )
+        return Response(status=201, headers={})
 

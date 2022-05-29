@@ -34,7 +34,6 @@ class UserItem(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, User.json_schema())
         except ValidationError as e:
@@ -47,9 +46,7 @@ class UserItem(Resource):
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Chef with username '{username}' already exists.".format(
-                    **request.json
-                )
+                "Chef with username '{username}' already exists.".format(**request.json)
             )
         return Response(status=204)
 
@@ -60,6 +57,7 @@ class UserItem(Resource):
         cursor.execute(sql)
         conn.commit()
         return Response(status=204)
+
 
 class UserCollection(Resource):
     def get(self):
@@ -79,7 +77,6 @@ class UserCollection(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, User.json_schema())
         except ValidationError as e:
@@ -92,8 +89,6 @@ class UserCollection(Resource):
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Chef with username '{username}' already exists.".format(
-                    **request.json
-                )
+                "Chef with username '{username}' already exists.".format(**request.json)
             )
         return Response(status=201, headers={})

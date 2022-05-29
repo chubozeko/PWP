@@ -24,6 +24,7 @@ def parse_row(row):
         creator_id=row[8]
     )
 
+
 class RecipeItem(Resource):
     def get(self, recipe, chef=None):
         conn = db_connection_mysql()
@@ -42,7 +43,6 @@ class RecipeItem(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, Recipe.json_schema())
         except ValidationError as e:
@@ -63,9 +63,7 @@ class RecipeItem(Resource):
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Recipe with name '{recipe_name}' already exists.".format(
-                    **request.json
-                )
+                "Recipe with the name '{recipe_name}' already exists.".format(**request.json)
             )
         return Response(status=204)
 
@@ -79,6 +77,7 @@ class RecipeItem(Resource):
         cursor.execute(sql)
         conn.commit()
         return Response(status=204)
+
 
 class RecipeCollection(Resource):
     def get(self, chef=None):
@@ -101,7 +100,6 @@ class RecipeCollection(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, Recipe.json_schema())
         except ValidationError as e:
@@ -123,8 +121,6 @@ class RecipeCollection(Resource):
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Recipe with name '{recipe_name}' already exists.".format(
-                    **request.json
-                )
+                "Recipe with the name '{recipe_name}' already exists.".format(**request.json)
             )
         return Response(status=201, headers={})

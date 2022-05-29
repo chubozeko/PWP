@@ -19,6 +19,7 @@ def parse_row(row):
         user_id=row[3]
     )
 
+
 class CookbookItem(Resource):
     def get(self, chef, cookbook):
         conn = db_connection_mysql()
@@ -34,7 +35,6 @@ class CookbookItem(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, Cookbook.json_schema())
         except ValidationError as e:
@@ -84,7 +84,6 @@ class CookbookCollection(Resource):
         cursor = conn.cursor()
         if not request.json:
             raise UnsupportedMediaType
-        # TODO: json_schema() validation [PWP-17]
         try:
             validate(request.json, Cookbook.json_schema())
         except ValidationError as e:
@@ -100,8 +99,6 @@ class CookbookCollection(Resource):
             conn.commit()
         except IntegrityError:
             raise Conflict(
-                "Cookbook with name '{name}' already exists.".format(
-                    **request.json
-                )
+                "Cookbook with the name '{name}' by this user already exists.".format(**request.json)
             )
         return Response(status=201, headers={})
