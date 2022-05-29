@@ -1,0 +1,15 @@
+
+src/eathelp/
+eathelp/resources/__pycache__/user.cpython-39.pyc
+eathelp/resources/__pycache__/recipe_ingredient.cpython-39.pyc
+eathelp/resources/__pycache__/recipe.cpython-39.pyc
+eathelp/resources/__pycache__/ingredient.cpython-39.pyc
+eathelp/resources/__pycache__/cookbook.cpython-39.pyc
+eathelp/resources/__pycache__/__init__.cpython-39.pyc
+eathelp/db/__pycache__/load_database.cpython-39.pyc
+eathelp/__pycache__/models.cpython-39.pyc
+eathelp/__pycache__/api.cpython-39.pyc
+eathelp/__pycache__/__init__.cpython-39.pyc
+__pycache__/credentials.cpython-39.pyc
+.idea/workspace.xml
+.idea/misc.xml
