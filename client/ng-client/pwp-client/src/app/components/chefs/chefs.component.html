@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row ng-scope">
+    <div class="my-4">
+      <h1 class="search-results-count">Chefs</h1>
+    </div>
+    <div class="col-md-9 col-md-pull-3" *ngFor="let chef of chefs">
+      <section class="search-result-item">
+        <a class="image-link" href="#"
+          ><img class="image" src="../../../assets/avatar1.png" />
+        </a>
+        <div class="search-result-item-body">
+          <div class="row">
+            <div class="col-sm-9">
+              <h4 class="search-result-item-heading">
+                <a href="#">{{ chef.username }}</a>
+              </h4>
+              <p class="info">Helsinki, ID: {{ chef.user_id }}</p>
+              <p class="description">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam
+                obcaecati inventore doloribus reprehenderit minima quis atque
+                quibusdam libero vel eaque dolor suscipit, quasi recusandae
+                aspernatur ratione, eligendi possimus doloremque. Vitae
+                veritatis facilis adipisci itaque placeat aliquam, voluptatibus
+                unde similique. Accusamus quibusdam vitae, rerum nobis alias
+                aliquam necessitatibus expedita praesentium ex!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

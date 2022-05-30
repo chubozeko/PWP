@@ -10,6 +10,7 @@ from eathelp.resources.user import UserCollection, UserItem
 blueprint = Blueprint("api", __name__, url_prefix="/api")
 api = Api(blueprint)
 
+
 api.add_resource(UserCollection, "/chefs/")
 api.add_resource(UserItem, "/chefs/<chef>")     # "/chefs/<int:chef>"
 api.add_resource(CookbookCollection, "/chefs/<chef>/cookbooks/", "/cookbooks/")     # "/chefs/<int:chef>"

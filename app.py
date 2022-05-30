@@ -3,7 +3,7 @@ import os
 # starts the EatHelp API app
 from eathelp import create_app
 app = create_app()
-# app.run(debug=True)
+app.run(debug=True)
 
 @app.route("/")
 def home_documentation():
@@ -14,5 +14,5 @@ def home_documentation():
 def favicon():
     return "<h1>EatHelp API: favicon.ico</h1> ", 200
 
-port = os.environ.get("PORT", 5000)
-app.run(debug=False, host="0.0.0.0", port=port)
+# port = os.environ.get("PORT", 5000)
+# app.run(debug=False, host="0.0.0.0", port=port)
