@@ -1,15 +1,12 @@
-##
-# !! This is intended of the STAGING DEPLOYMENT of EatHelp API on Heroku. !!
-##
-
 import os
+
 # starts the EatHelp API app
 from eathelp import create_app
 app = create_app(init_db=True)
 port = os.environ.get("PORT", 5000)
 
-"""For staging/production server:"""
-app.run(debug=False, host="0.0.0.0", port=port)
+"""For development server:"""
+app.run(debug=True)
 
 @app.route("/")
 def home_documentation():

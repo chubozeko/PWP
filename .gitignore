@@ -18,3 +18,4 @@ __pycache__/credentials.cpython-39.pyc
 .idea/modules.xml
 .idea/PWP.iml
 .idea/vcs.xml
+credentials_.py

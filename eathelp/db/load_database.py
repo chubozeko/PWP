@@ -1,7 +1,7 @@
 import mysql.connector
 from pymysql import Error
 
-from credentials import get_db_credentials
+from credentials_ import get_db_credentials
 
 def db_connection_mysql(init_db=False):
     conn = None

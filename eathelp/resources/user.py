@@ -6,7 +6,7 @@ from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
 from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
 
-from credentials import get_db_credentials
+from credentials_ import get_db_credentials
 from eathelp.db.load_database import db_connection_mysql
 from eathelp.models import User
 
