@@ -6,7 +6,7 @@ from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
 from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
 
-from credentials_ import get_db_credentials
+from eathelp import cache, api
 from eathelp.db.load_database import db_connection_mysql
 from eathelp.models import User
 
@@ -20,6 +20,7 @@ def parse_row(row):
 
 
 class UserItem(Resource):
+    @cache.cached()
     def get(self, chef):
         conn = db_connection_mysql()
         cursor = conn.cursor()
@@ -57,6 +58,13 @@ class UserItem(Resource):
         cursor.execute(sql)
         conn.commit()
         return Response(status=204)
+
+    def _clear_cache(self):
+        user_path = api.url_for(UserCollection)
+        cache.delete_many((
+            user_path,
+            request.path,
+        ))
 
 
 class UserCollection(Resource):

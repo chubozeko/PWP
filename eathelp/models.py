@@ -106,8 +106,8 @@ class Recipe(db.Model):
     def json_schema():
         schema = {
             "type": "object",
-            "required": ["recipe_name", "description", "prep_time", "cooking_time", "meal_type",
-                         "calories", "servings", "instructions", "ingredients"]
+            "required": ["recipe_name", "prep_time", "cooking_time",
+                         "calories", "servings", "instructions"]
         }
         props = schema["properties"] = {}
         props["recipe_name"] = {
