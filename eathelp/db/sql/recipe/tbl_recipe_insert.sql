@@ -1,7 +1,8 @@
 USE `pwp_db`;
 
-INSERT INTO recipe (recipe_name, prep_time, cooking_time, meal_type, calories, servings, creator_id, instructions) VALUES
+INSERT INTO recipe (recipe_name, prep_time, cooking_time, meal_type, calories, servings, creator_id, description, instructions) VALUES
 	('Mash', 10, 20, 'non-vegetarian', 780, 1, 1,
+	'A delicious mix of mashed potatoes and boiled eggs',
     '1. Peel the potatoes and boil them for 20 minutes, or until they are soft.
     2. Boil the eggs for 15 minutes.
     3. Mash the potatoes and put them in a bowl.
@@ -12,6 +13,7 @@ INSERT INTO recipe (recipe_name, prep_time, cooking_time, meal_type, calories, s
     8. Warm up the mash in the microwave if you wish to have it hot.'
     ),
     ('Minced Meat with Beans and Vegetables', 15, 20, 'non-vegetarian', 1265, 3, 2,
+    'A tasty, protein-filled meal with vegetables',
     '1. Cut the onion into smaller pieces.
     2. Peel and grate the carrot.
     3. Grate the tomato to use for the sauce.
@@ -33,4 +35,5 @@ ON DUPLICATE KEY UPDATE
     calories = new_entries.calories,
     servings = new_entries.servings,
     creator_id = new_entries.creator_id,
+    description = new_entries.description,
     instructions = new_entries.instructions;

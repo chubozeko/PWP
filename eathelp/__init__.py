@@ -4,18 +4,17 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
 from credentials import get_db_credentials
-from eathelp.api import api
+from eathelp.db.load_database import db_connection_mysql
 
 db = SQLAlchemy()
 cache = Cache()
 
 # Based on http://flask.pocoo.org/docs/1.0/tutorial/factory/#the-application-factory
 # Modified to use Flask SQLAlchemy
-def create_app(test_config=None):
+def create_app(test_config=None, init_db=False):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
-
         SQLALCHEMY_DATABASE_URI = "mysql+pymysql://" + \
                                                 get_db_credentials()["user"] + \
                                                 ":" + get_db_credentials()["password"] + \
@@ -39,7 +38,9 @@ def create_app(test_config=None):
         pass
 
     db.init_app(app)
+    db_connection_mysql(init_db)
     cache.init_app(app)
+    from eathelp.api import api
     app.register_blueprint(api.blueprint)
     CORS(app)
     return app

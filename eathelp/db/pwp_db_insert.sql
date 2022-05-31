@@ -37,8 +37,9 @@ INSERT INTO ingredient (name) VALUES
 ON DUPLICATE KEY UPDATE 
 	name = new_entries.name;
 
-INSERT INTO recipe (recipe_name, prep_time, cooking_time, meal_type, calories, servings, creator_id, instructions) VALUES 
-	('Mash', 10, 20, 'non-vegetarian', 780, 1, 1, 
+INSERT INTO recipe (recipe_name, prep_time, cooking_time, meal_type, calories, servings, creator_id, description, instructions) VALUES
+	('Mash', 10, 20, 'non-vegetarian', 780, 1, 1,
+	'A delicious mix of mashed potatoes and boiled eggs',
     '1. Peel the potatoes and boil them for 20 minutes, or until they are soft. 
     2. Boil the eggs for 15 minutes.
     3. Mash the potatoes and put them in a bowl.
@@ -48,7 +49,8 @@ INSERT INTO recipe (recipe_name, prep_time, cooking_time, meal_type, calories, s
     7. Add the mayonnaise and sugar to the bowl and mix them well.
     8. Warm up the mash in the microwave if you wish to have it hot.'
     ),
-    ('Minced Meat with Beans and Vegetables', 15, 20, 'non-vegetarian', 1265, 3, 2, 
+    ('Minced Meat with Beans and Vegetables', 15, 20, 'non-vegetarian', 1265, 3, 2,
+    'A tasty, protein-filled meal with vegetables',
     '1. Cut the onion into smaller pieces.
     2. Peel and grate the carrot.
     3. Grate the tomato to use for the sauce.
@@ -70,6 +72,7 @@ ON DUPLICATE KEY UPDATE
     calories = new_entries.calories,
     servings = new_entries.servings,
     creator_id = new_entries.creator_id,
+    description = new_entries.description,
     instructions = new_entries.instructions;
     
 INSERT INTO recipe_ingredient (recipe_id, ingredient_id, amount, unit) VALUES 
@@ -115,7 +118,7 @@ ON DUPLICATE KEY UPDATE
     description = new_entries.description,
 	user_id = new_entries.user_id;
 
-INSERT INTO collections (cookbook_id, recipe_id) VALUES 
+INSERT INTO cookbook_recipes (cookbook_id, recipe_id) VALUES
 	(1, 1),
     (2, 1),
     (2, 2),
@@ -124,11 +127,3 @@ INSERT INTO collections (cookbook_id, recipe_id) VALUES
 ON DUPLICATE KEY UPDATE 
 	cookbook_id = new_entries.cookbook_id,
 	recipe_id = new_entries.recipe_id;
-    
--- INSERT INTO table1 (col1, col2) VALUES 
--- 	(''),(''),(''),(''),(''),(''),('')
---     AS new_entries
--- ON DUPLICATE KEY UPDATE 
--- 	col1 = new_entries.col1,
--- 	col2 = new_entries.col2
--- ;

@@ -19,6 +19,7 @@ DROP TABLE IF EXISTS `recipe`;
 CREATE TABLE IF NOT EXISTS `recipe` (
     `recipe_id` INT NOT NULL AUTO_INCREMENT,
     `recipe_name` VARCHAR(50) UNIQUE NOT NULL,
+    `description` VARCHAR(280) NULL,
     `prep_time` INT NOT NULL,
     `cooking_time` INT NOT NULL,
     `meal_type` ENUM ('vegetarian', 'non-vegetarian', 'lactose-free') NULL,
@@ -53,14 +54,12 @@ CREATE TABLE IF NOT EXISTS `cookbook` (
 );
 
 DROP TABLE IF EXISTS `collections`;
-CREATE TABLE IF NOT EXISTS `collections` (
+DROP TABLE IF EXISTS `cookbook_recipes`;
+CREATE TABLE IF NOT EXISTS `cookbook_recipes` (
     `col_id` INT NOT NULL AUTO_INCREMENT,
     `cookbook_id` INT NOT NULL,
     `recipe_id` INT NOT NULL,
-    PRIMARY KEY (`col_id`)
+    PRIMARY KEY (`col_id`),
     CONSTRAINT `fk_col_cookbook_id` FOREIGN KEY (`cookbook_id`) REFERENCES `cookbook` (`cookbook_id`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT `fk_col_recipe_id` FOREIGN KEY (`recipe_id`) REFERENCES `recipe` (`recipe_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
--- SET foreign_key_checks = 0;
--- SET foreign_key_checks = 1;

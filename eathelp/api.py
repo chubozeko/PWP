@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask_restful import Api
 
+from eathelp.resources.cookbook_recipes import CookbookRecipesItem, CookbookRecipesCollection
 from eathelp.resources.recipe import RecipeCollection, RecipeItem
 from eathelp.resources.cookbook import CookbookCollection, CookbookItem
 from eathelp.resources.ingredient import IngredientCollection, IngredientItem
@@ -20,6 +21,8 @@ api.add_resource(RecipeIngredientCollection, "/recipes/<int:recipe>/ingredients/
 api.add_resource(RecipeIngredientItem, "/recipes/<int:recipe>/ingredients/<int:r_ingredient>")
 api.add_resource(IngredientCollection, "/ingredients/")
 api.add_resource(IngredientItem, "/ingredients/<int:ingredient>")
+api.add_resource(CookbookRecipesCollection, "/cookbooks/<int:cookbook>/recipes")
+api.add_resource(CookbookRecipesItem, "/cookbooks/<int:cookbook>/recipes/<int:recipe>")
 
 # Parameters used:
 # - <int:chef> = User.user_id OR <string:chef> = User.username

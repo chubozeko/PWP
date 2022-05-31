@@ -15,13 +15,14 @@ def parse_row(row):
     return Recipe(
         recipe_id=row[0],
         recipe_name=row[1],
-        prep_time=row[2],
-        cooking_time=row[3],
-        meal_type=row[4],
-        calories=row[5],
-        servings=row[6],
-        instructions=row[7],
-        creator_id=row[8]
+        description=row[2],
+        prep_time=row[3],
+        cooking_time=row[4],
+        meal_type=row[5],
+        calories=row[6],
+        servings=row[7],
+        instructions=row[8],
+        creator_id=row[9]
     )
 
 
@@ -51,14 +52,14 @@ class RecipeItem(Resource):
         r.deserialize(request.json)
         try:
             if chef is not None:
-                sql = """UPDATE recipe SET recipe_name = %s, prep_time = %s, cooking_time = %s, meal_type = %s, calories = %s, 
+                sql = """UPDATE recipe SET recipe_name = %s, description = %s, prep_time = %s, cooking_time = %s, meal_type = %s, calories = %s, 
                 servings = %s, instructions = %s WHERE recipe_id = """ + str(recipe) + """ AND creator_id = """ + str(chef)
-                cursor.execute(sql, (r.recipe_name, r.prep_time, r.cooking_time, r.meal_type, r.calories, r.servings,
+                cursor.execute(sql, (r.recipe_name, r.description, r.prep_time, r.cooking_time, r.meal_type, r.calories, r.servings,
                         '\n'.join(r.instructions)))
             else:
-                sql = """UPDATE recipe SET recipe_name = %s, prep_time = %s, cooking_time = %s, meal_type = %s, calories = %s, 
+                sql = """UPDATE recipe SET recipe_name = %s, description = %s, prep_time = %s, cooking_time = %s, meal_type = %s, calories = %s, 
                                 servings = %s, creator_id = %s, instructions = %s WHERE recipe_id = """ + str(recipe)
-                cursor.execute(sql, (r.recipe_name, r.prep_time, r.cooking_time, r.meal_type, r.calories, r.servings,
+                cursor.execute(sql, (r.recipe_name, r.description, r.prep_time, r.cooking_time, r.meal_type, r.calories, r.servings,
                                      r.creator_id, '\n'.join(r.instructions)))
             conn.commit()
         except IntegrityError:
@@ -108,14 +109,14 @@ class RecipeCollection(Resource):
         recipe.deserialize(request.json)
         try:
             sql = """INSERT INTO recipe 
-            (recipe_name, prep_time, cooking_time, meal_type, calories, servings, creator_id, instructions) 
+            (recipe_name, description, prep_time, cooking_time, meal_type, calories, servings, creator_id, instructions) 
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
             if chef is not None:
-                cursor.execute(sql, (recipe.recipe_name, recipe.prep_time, recipe.cooking_time, recipe.meal_type,
+                cursor.execute(sql, (recipe.recipe_name, recipe.description, recipe.prep_time, recipe.cooking_time, recipe.meal_type,
                                      recipe.calories, recipe.servings, str(chef),
                                      '\n'.join(recipe.instructions)))
             else:
-                cursor.execute(sql, (recipe.recipe_name, recipe.prep_time, recipe.cooking_time, recipe.meal_type,
+                cursor.execute(sql, (recipe.recipe_name, recipe.description, recipe.prep_time, recipe.cooking_time, recipe.meal_type,
                                      recipe.calories, recipe.servings, recipe.creator_id,
                                      '\n'.join(recipe.instructions)))
             conn.commit()

@@ -62,6 +62,7 @@ class Ingredient(db.Model):
 class Recipe(db.Model):
     recipe_id = db.Column(db.Integer, primary_key=True)
     recipe_name = db.Column(db.String(50), nullable=False, unique=True)
+    description = db.Column(db.String(280), nullable=True)
     prep_time = db.Column(db.Integer, nullable=False)
     cooking_time = db.Column(db.Integer, nullable=False)
     meal_type = db.Column(db.String(20), nullable=True)
@@ -71,13 +72,14 @@ class Recipe(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey("user.user_id", ondelete="SET NULL"))
 
     user = db.relationship("User", back_populates="recipes")
-    collections = db.relationship("Collections", cascade="all, delete-orphan", back_populates="recipe")
     ingredients = db.relationship("RecipeIngredient", cascade="all, delete-orphan", back_populates="recipe")
+    recipe_collection = db.relationship("CookbookRecipes", cascade="all, delete-orphan", back_populates="recipe")
 
     def serialize(self, short_form=False):
         doc = {
             "recipe_id": self.recipe_id,
             "recipe_name": self.recipe_name,
+            "description": self.description,
             "creator_id": self.creator_id # and self.user.serialize()
         }
         if not short_form:
@@ -91,6 +93,7 @@ class Recipe(db.Model):
 
     def deserialize(self, doc):
         self.recipe_name = doc["recipe_name"]
+        self.description = doc["description"]
         self.prep_time = doc["prep_time"]
         self.cooking_time = doc["cooking_time"]
         self.meal_type = doc["meal_type"]
@@ -103,12 +106,16 @@ class Recipe(db.Model):
     def json_schema():
         schema = {
             "type": "object",
-            "required": ["recipe_name", "prep_time", "cooking_time", "meal_type",
+            "required": ["recipe_name", "description", "prep_time", "cooking_time", "meal_type",
                          "calories", "servings", "instructions", "ingredients"]
         }
         props = schema["properties"] = {}
         props["recipe_name"] = {
             "description": "Name of the recipe",
+            "type": "string"
+        }
+        props["description"] = {
+            "description": "A short description of the recipe",
             "type": "string"
         }
         props["prep_time"] = {
@@ -208,7 +215,7 @@ class Cookbook(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id", ondelete="SET NULL"))
 
     user = db.relationship("User", back_populates="cookbooks")
-    collections = db.relationship("Collections", cascade="all, delete-orphan", back_populates="cookbook")
+    recipe_collection = db.relationship("CookbookRecipes", cascade="all, delete-orphan", back_populates="cookbook")
 
     def serialize(self, short_form=False):
         doc = {
@@ -246,12 +253,40 @@ class Cookbook(db.Model):
         # }
         return schema
 
-class Collections(db.Model):
+class CookbookRecipes(db.Model):
+    __tablename__ = "cookbook_recipes"
+
     col_id = db.Column(db.Integer, primary_key=True)
-    cookbook_id = db.Column(db.Integer, db.ForeignKey("cookbook.cookbook_id", ondelete="SET NULL"))
-    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.recipe_id", ondelete="SET NULL"))
+    cookbook_id = db.Column(db.Integer, db.ForeignKey("cookbook.cookbook_id", ondelete="CASCADE"))
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.recipe_id", ondelete="CASCADE"))
 
-    cookbook = db.relationship("Cookbook", back_populates="collections")
-    recipe = db.relationship("Recipe", back_populates="collections")
+    cookbook = db.relationship("Cookbook", back_populates="recipe_collection")
+    recipe = db.relationship("Recipe", back_populates="recipe_collection")
 
+    def serialize(self):
+        return {
+            "cookbook_id": self.cookbook_id,
+            "recipe_id": self.recipe_id
+        }
+
+    def deserialize(self, doc):
+        self.cookbook_id = doc["cookbook_id"]
+        self.recipe_id = doc["recipe_id"]
+
+    @staticmethod
+    def json_schema():
+        schema = {
+            "type": "object",
+            "required": ["cookbook_id", "recipe_id"]
+        }
+        props = schema["properties"] = {}
+        props["cookbook_id"] = {
+            "description": "The ID of the cookbook",
+            "type": "number"
+        }
+        props["recipe_id"] = {
+            "description": "The ID of the recipe within the cookbook",
+            "type": "number"
+        }
+        return schema
 

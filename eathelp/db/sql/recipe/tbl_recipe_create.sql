@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS `recipe`;
 CREATE TABLE IF NOT EXISTS `recipe` (
     `recipe_id` INT NOT NULL AUTO_INCREMENT,
     `recipe_name` VARCHAR(50) NOT NULL,
+    `description` VARCHAR(280) NULL,
     `prep_time` INT NOT NULL,
     `cooking_time` INT NOT NULL,
     `meal_type` ENUM ('vegetarian', 'non-vegetarian') NOT NULL,

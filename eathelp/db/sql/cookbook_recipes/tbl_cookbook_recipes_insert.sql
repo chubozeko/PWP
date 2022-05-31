@@ -1,6 +1,6 @@
 USE `pwp_db`;
 
-INSERT INTO collections (cookbook_id, recipe_id) VALUES
+INSERT INTO cookbook_recipes (cookbook_id, recipe_id) VALUES
 	(1, 1),
     (2, 1),
     (2, 2),

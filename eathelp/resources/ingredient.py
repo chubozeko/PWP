@@ -6,8 +6,7 @@ from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
 from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
 
-from eathelp import cache
-from eathelp.api import api
+from eathelp import cache, api
 from eathelp.db.load_database import db_connection_mysql
 from eathelp.models import Ingredient
 
