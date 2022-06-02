@@ -5,7 +5,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
 from flasgger import Swagger, swag_from
-from credentials_ import get_db_credentials
+from credentials import get_db_credentials
 from eathelp.db.load_database import db_connection_mysql
 
 db = SQLAlchemy()
