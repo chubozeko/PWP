@@ -10,12 +10,16 @@ __Remember to include all required documentation and HOWTOs, including how to cr
 
 ---
 # Project Layout
-Last updated: 10/05/2022
+Last updated: 02/06/2022
 
 ```
 PWP/
+├── app.py
+├── app_dev.py
+├── app_dev_db.py
 ├── home.md
 ├── meetings.md
+├── Procfile
 ├── README.md
 ├── requirements.txt
 ├── setup.py
@@ -24,12 +28,16 @@ PWP/
 │   ├── api.py
 │   ├── models.py
 │   ├── README.md
+│   ├── doc/
+│   │   └── eathelp.yaml
 │   ├── resources/
 │   │   ├── __init__.py
 │   │   ├── cookbook.py
+│   │   ├── cookbook_recipes.py
 │   │   ├── ingredient.py
 │   │   ├── recipe.py
-│   │   └── recipe_ingredient.py
+│   │   ├── recipe_ingredient.py
+│   │   └── user.py
 │   ├── db/
 │   │   ├── load_database.py
 │   │   ├── pwp_db_create.sql
@@ -37,9 +45,9 @@ PWP/
 │   │   ├── README.md
 │   │   └── sql/
 │   │       ├── pwp_db_dump.sql
-│   │       ├── collections/
-│   │       │   ├── tbl_collections_create.sql
-│   │       │   └── tbl_collections_insert.sql
+│   │       ├── cookbook_recipes/
+│   │       │   ├── tbl_cookbook_recipes_create.sql
+│   │       │   └── tbl_cookbook_recipes_insert.sql
 │   │       ├── cookbook/
 │   │       │   ├── tbl_cookbook_create.sql
 │   │       │   └── tbl_cookbook_insert.sql
@@ -60,11 +68,10 @@ PWP/
 │   ├── README.md
 │   └── dummy_data/
 │       └── requests/
-│           ├── request_recipe_0.json
-│           ├── request_recipe_1.json
-│           ├── request_recipe_2.json
-│           └── request_recipe_3.json
 └── client/
+    ├── ng-client/
+    │   └── pwp-client/
+    │       └── dist/
     └── README.md
 ```
 
