@@ -1,0 +1,920 @@
+openapi: 3.0.3
+info:
+  title: EatHelp API Documentation
+  version: 0.0.2
+  description: >
+    EatHelp API provides an interface for people to manage cookbooks, recipes
+    and ingredients. 
+
+    It allows users to add, update and remove recipes. These recipes can be
+    added to a collection of recipes called a cookbook. 
+
+    The cookbook would have a name, short description and a list of recipes
+    saved to it. 
+
+    Each recipe contains certain properties such as recipe name, preparation
+    time, cooking time, meal type, servings and number of calories, as well as a
+    list of recipe ingredients and instructions. 
+
+    Each recipe ingredient defines a predefined ingredient with the amount and
+    measuring unit required for the specific recipe. 
+
+    A chef (user) has a username, and are linked to their created cookbooks,
+    their saved recipes (if they were not assigned to a cookbook) and their
+    created recipes.
+servers:
+  - url: /api
+components:
+  schemas:
+    Cookbook:
+      type: object
+      properties:
+        description:
+          description: The description of the cookbook
+          type: string
+        name:
+          description: Name of the cookbook
+          type: string
+        user_id:
+          description: Creator id (chef/user)
+          type: number
+      required:
+        - name
+        - description
+    CookbookRecipes:
+      type: object
+      properties:
+        cookbook_id:
+          description: The ID of the cookbook
+          type: number
+        recipe_id:
+          description: The ID of the recipe within the cookbook
+          type: number
+      required:
+        - cookbook_id
+        - recipe_id
+    Ingredient:
+      type: object
+      properties:
+        name:
+          description: The ingredient's name
+          type: string
+      required:
+        - name
+    Recipe:
+      type: object
+      properties:
+        calories:
+          description: The amount of calories in the meal
+          type: number
+        cooking_time:
+          description: Time required to cook the meal (in minutes)
+          type: number
+        description:
+          description: A short description of the recipe
+          type: string
+        ingredients:
+          description: The ingredients used in the recipe
+          type: array
+          items:
+            type: object
+        instructions:
+          description: The steps taken to prepare the meal
+          items:
+            type: string
+          type: array
+        meal_type:
+          description: The type of meal
+          type: string
+        prep_time:
+          description: Time required to prepare the meal (in minutes)
+          type: number
+        recipe_name:
+          description: Name of the recipe
+          type: string
+        servings:
+          description: The number of servings that the recipe produces
+          type: number
+      required:
+        - recipe_name
+        - prep_time
+        - cooking_time
+        - calories
+        - servings
+        - instructions
+    RecipeIngredient:
+      type: object
+      properties:
+        amount:
+          description: The measurable amount of the ingredient
+          type: number
+        ingredient_id:
+          description: The ID of the ingredient used
+          type: number
+        recipe_id:
+          description: The ID of the recipe where the ingredient is used
+          type: number
+        unit:
+          description: >-
+            The measuring unit for the ingredient (e.g. grams, ml, teaspoons,
+            etc.)
+          type: string
+      required:
+        - amount
+        - unit
+        - ingredient_id
+    User:
+      type: object
+      properties:
+        username:
+          description: The chef's unique username
+          type: string
+      required:
+        - username
+  parameters:
+    chef:
+      description: Selected chef's unique id
+      in: path
+      name: chef
+      required: true
+      schema:
+        type: number
+    cookbook:
+      description: Selected cookbook's unique id
+      in: path
+      name: cookbook
+      required: true
+      schema:
+        type: number
+    ingredient:
+      description: Selected ingredient's unique id
+      in: path
+      name: ingredient
+      required: true
+      schema:
+        type: number
+    recipe:
+      description: Selected recipe's unique id
+      in: path
+      name: recipe
+      required: true
+      schema:
+        type: number
+    recipe_ingredient:
+      description: Unique id of the recipe ingredient (ingredient used in a recipe)
+      in: path
+      name: recipe_ingredient
+      required: true
+      schema:
+        type: number
+paths:
+  /chefs/:
+    get:
+      summary: List of all chefs
+      description: Retrieves a collection of all the chefs (users)
+      tags:
+        - chefs
+      responses:
+        '200':
+          description: An array list of chefs
+          content:
+            application/json:
+              examples:
+                chef-list:
+                  description: A list containing chefs
+                  value:
+                    items:
+                      - user_id: 1
+                        username: teemu_pukki
+                      - user_id: 2
+                        username": glen_kamara
+                empty-list:
+                  description: list without any chefs
+                  value:
+                    items: []
+        '404':
+          description: Unable to retrieve chefs
+    post:
+      summary: Add a new chef
+      tags:
+        - chefs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              username: lukas_hradecky
+      responses:
+        '201':
+          description: Chef created
+        '400':
+          description: Invalid request body
+        '409':
+          description: Chef already exists
+        '415':
+          description: Unsupported media type
+  /chefs/{chef}:
+    parameters:
+      - $ref: '#/components/parameters/chef'
+    get:
+      description: Retrieve a single chef (user) using its id
+      summary: Find a chef
+      tags:
+        - chefs
+      responses:
+        '200':
+          description: An array list of chefs
+          content:
+            application/json:
+              examples:
+                chef-item:
+                  description: A single chef
+                  value:
+                    items:
+                      - user_id: 4
+                        username": jere_uronen
+        '400':
+          description: 'Cannot find chef with given id {chef}: list index out of range'
+    put:
+      summary: Update a chef
+      tags:
+        - chefs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+            example:
+              username: robin_lod
+      responses:
+        '204':
+          description: Chef updated
+        '400':
+          description: Invalid request body
+        '409':
+          description: Chef with username {username} already exists.
+        '415':
+          description: Unsupported media type
+    delete:
+      description: Removes a chef (user) using its id
+      summary: Removes a chef
+      tags:
+        - chefs
+      responses:
+        '204':
+          description: No content
+  /chefs/{chef}/cookbooks/:
+    parameters:
+      - $ref: '#/components/parameters/chef'
+    get:
+      summary: List of all cookbooks from a chef
+      description: >-
+        Retrieves a collection of all the cookbooks created by a specific chef
+        (user)
+      tags:
+        - cookbooks
+      responses:
+        '200':
+          description: An array list of cookbooks
+          content:
+            application/json:
+              examples:
+                cookbook-list:
+                  description: A list containing cookbooks
+                  value:
+                    items:
+                      - cookbook_id: 1
+                        name: Goalscoring Recipes
+                        user_id: 3
+                      - cookbook_id: 2
+                        name: Tiki Taka Treats
+                        user_id: 3
+                empty-list:
+                  description: list without cookbooks
+                  value:
+                    items: []
+        '400':
+          description: Cannot find any cookbooks from chef
+    post:
+      summary: Add a new cookbook by chef
+      tags:
+        - cookbooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cookbook'
+            example:
+              name: World Cup of Delicious
+              description: Summer time recipes for the big tournament
+      responses:
+        '201':
+          description: Cookbook created
+        '400':
+          description: Invalid request body
+        '409':
+          description: Cookbook with the name '{name}' from this chef already exists
+        '415':
+          description: Unsupported media type
+  /cookbooks/:
+    get:
+      summary: List of all cookbooks
+      description: Retrieves a collection of all the cookbooks
+      tags:
+        - cookbooks
+      responses:
+        '200':
+          description: List of cookbooks found
+          content:
+            application/json:
+              examples:
+                chef-list:
+                  description: A list containing cookbooks
+                  value:
+                    items:
+                      - cookbook_id: 1
+                        name: Goalscoring Recipes
+                        user_id: 3
+                      - cookbook_id: 2
+                        name: Tiki Taka Treats
+                        user_id: 3
+                      - cookbook_id: 1
+                        name: Goal-saving Snacks
+                        user_id: 2
+                      - cookbook_id: 1
+                        name: Food for Forwards
+                        user_id: 1
+                empty-list:
+                  description: list without any cookbooks
+                  value:
+                    items: []
+        '400':
+          description: Cannot find any cookbooks
+  /chefs/{chef}/cookbooks/{cookbook}:
+    parameters:
+      - $ref: '#/components/parameters/chef'
+      - $ref: '#/components/parameters/cookbook'
+    get:
+      description: Retrieve a cookbook from a specific chef (user)
+      summary: Find a cookbook by chef
+      tags:
+        - cookbooks
+      responses:
+        '200':
+          description: Cookbook found
+          content:
+            application/json:
+              example:
+                cookbook_id: 1
+                name: Workweek Breakfasts
+                user_id: 1
+                description: My favorite meals to eat before I go to work.
+        '400':
+          description: >-
+            Cannot find cookbook with given id {cookbook}: list index out of
+            range
+    put:
+      summary: Update a cookbook
+      tags:
+        - cookbooks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cookbook'
+            example:
+              name: Suomi Snacks
+              description: Traditional Finnish recipes on the go
+      responses:
+        '204':
+          description: Cookbook updated
+        '400':
+          description: Invalid request body
+        '409':
+          description: Cookbook with name {name} already exists for this chef
+        '415':
+          description: Unsupported media type
+    delete:
+      description: Removes a cookbook of a chef (user) using its id
+      summary: Removes a chef's cookbook
+      tags:
+        - cookbooks
+      responses:
+        '204':
+          description: No content
+  /chefs/{chef}/recipes/:
+    parameters:
+      - $ref: '#/components/parameters/chef'
+    get:
+      summary: List of all recipes from a chef
+      description: >-
+        Retrieves a collection of all the recipes created by a specific chef
+        (user)
+      tags:
+        - recipes
+      responses:
+        '200':
+          description: An array list of recipe items
+          content:
+            application/json:
+              examples:
+                recipe-list:
+                  description: A list containing recipes
+                  value:
+                    items:
+                      - recipe_id: 1
+                        recipe_name: Homemade Chips
+                        description: Crunchy and delicious baked chips
+                        creator_id": 3
+                      - recipe_id: 5
+                        recipe_name: Tuna Patties
+                        description: >-
+                          Savoury, fried patties made with canned tuna and
+                          potatoes
+                        creator_id": 3
+                empty-list:
+                  description: list without recipes
+                  value:
+                    items: []
+        '400':
+          description: Cannot find any recipes from chef
+    post:
+      summary: Add a new recipe by chef
+      tags:
+        - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+            example:
+              recipe_name: Boiled Eggs with Toast
+              ingredients: null
+              prep_time: 5
+              cooking_time: 15
+              meal_type: non-vegetarian
+              servings: 1
+              calories: 356
+              instructions:
+                - >-
+                  1. Boil the eggs for about 10 minutes or until the water
+                  finishes.
+                - 2. Put 2 slices in the toaster on the medium setting.
+                - 3. Spread some butter on the toast while it is still hot.
+                - >-
+                  4. Peel the boiled eggs and serve with your desired spices and
+                  sauces.
+              creator_id: 3
+      responses:
+        '201':
+          description: Recipe created
+        '400':
+          description: Invalid request body
+        '409':
+          description: Recipe with the name '{name}' from this chef already exists
+        '415':
+          description: Unsupported media type
+  /recipes/:
+    get:
+      summary: List of all recipes
+      description: Retrieves a collection of all the available recipes
+      tags:
+        - recipes
+      responses:
+        '200':
+          description: An array list of recipe items
+          content:
+            application/json:
+              examples:
+                recipe-list:
+                  description: A list containing recipes
+                  value:
+                    items:
+                      - recipe_id: 1
+                        recipe_name: Homemade Chips
+                        description: Crunchy and delicious baked chips
+                        creator_id": 3
+                      - recipe_id: 5
+                        recipe_name: Tuna Patties
+                        description: >-
+                          Savoury, fried patties made with canned tuna and
+                          potatoes
+                        creator_id": 3
+                empty-list:
+                  description: list without recipes
+                  value:
+                    items: []
+        '400':
+          description: Cannot find any recipes
+  /chefs/{chef}/recipes/{recipe}:
+    parameters:
+      - $ref: '#/components/parameters/chef'
+      - $ref: '#/components/parameters/recipe'
+    get:
+      description: Retrieve a recipe from a specific chef (user)
+      summary: Find a recipe by chef
+      tags:
+        - recipes
+      responses:
+        '200':
+          description: Recipe found
+          content:
+            application/json:
+              example:
+                recipe_id: 1
+                recipe_name: Boiled Eggs with Toast
+                prep_time: 5
+                cooking_time: 15
+                meal_type: non-vegetarian
+                servings: 1
+                calories: 356
+                instructions:
+                  - >-
+                    1. Boil the eggs for about 10 minutes or until the water
+                    finishes.
+                  - 2. Put 2 slices in the toaster on the medium setting.
+                  - 3. Spread some butter on the toast while it is still hot.
+                  - >-
+                    4. Peel the boiled eggs and serve with your desired spices
+                    and sauces.
+                creator_id: 3
+        '400':
+          description: 'Cannot find recipe with given id {recipe}: list index out of range'
+    put:
+      summary: Update a recipe
+      tags:
+        - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+            example:
+              recipe_name: Boiled Carrots with Toast
+              ingredients: null
+              prep_time: 5
+              cooking_time: 20
+              meal_type: vegetarian
+              servings: 1
+              calories: 255
+              instructions:
+                - >-
+                  1. Boil the carrots for about 15 minutes or until the water
+                  finishes.
+                - 2. Put 2 slices in the toaster on the medium setting.
+                - 3. Spread some butter on the toast while it is still hot.
+                - 4. Serve the carrots with your desired spices and sauces.
+      responses:
+        '204':
+          description: Recipe updated
+        '400':
+          description: Invalid request body
+        '409':
+          description: Recipe with name {name} already exists for this chef
+        '415':
+          description: Unsupported media type
+    delete:
+      description: Removes a recipe of a chef (user) using its id
+      summary: Removes a chef's recipe
+      tags:
+        - recipes
+      responses:
+        '204':
+          description: No content
+  /recipes/{recipe}:
+    parameters:
+      - $ref: '#/components/parameters/recipe'
+    get:
+      description: Retrieve a recipe
+      summary: Find a recipe
+      tags:
+        - recipes
+      responses:
+        '200':
+          description: Recipe found
+          content:
+            application/json:
+              example:
+                recipe_id: 1
+                recipe_name: Boiled Eggs with Toast
+                prep_time: 5
+                cooking_time: 15
+                meal_type: non-vegetarian
+                servings: 1
+                calories: 356
+                instructions:
+                  - >-
+                    1. Boil the eggs for about 10 minutes or until the water
+                    finishes.
+                  - 2. Put 2 slices in the toaster on the medium setting.
+                  - 3. Spread some butter on the toast while it is still hot.
+                  - >-
+                    4. Peel the boiled eggs and serve with your desired spices
+                    and sauces.
+                creator_id: 3
+        '400':
+          description: 'Cannot find recipe with given id {recipe}: list index out of range'
+  /recipes/{recipe}/ingredients/:
+    parameters:
+      - $ref: '#/components/parameters/recipe'
+    get:
+      summary: List of all ingredients from a recipe
+      description: Retrieves a collection of all the ingredients from a specific recipe
+      tags:
+        - recipe ingredients
+      responses:
+        '200':
+          description: An array list of recipe ingredients
+          content:
+            application/json:
+              examples:
+                recipe-list:
+                  description: A list containing recipe ingredients
+                  value:
+                    items:
+                      - id: 4
+                        amount: 1
+                        unit: TABLESPOON
+                        ingredient_id: 4
+                        recipe_id: 2
+                      - id: 7
+                        amount: 0.5
+                        unit: TEASPOON
+                        ingredient_id: 5
+                        recipe_id: 2
+                      - id: 9
+                        amount: 200
+                        unit: GRAMS
+                        ingredient_id: 6
+                        recipe_id: 2
+                empty-list:
+                  description: list without recipe ingredients
+                  value:
+                    items: []
+        '400':
+          description: Cannot find any ingredients from recipe
+    post:
+      summary: Add a new ingredient for recipe
+      tags:
+        - recipe ingredients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeIngredient'
+            example:
+              amount: 4
+              unit: CUPS
+              ingredient_id: 3
+      responses:
+        '201':
+          description: Recipe Ingredient created
+        '400':
+          description: Invalid request body
+        '409':
+          description: Ingredient with the name '{name}' from this recipe already exists
+        '415':
+          description: Unsupported media type
+  /recipes/{recipe}/ingredients/{recipe_ingredient}:
+    parameters:
+      - $ref: '#/components/parameters/recipe'
+      - $ref: '#/components/parameters/recipe_ingredient'
+    get:
+      description: Retrieve an ingredient from a recipe
+      summary: Find an ingredient from a recipe
+      tags:
+        - recipe ingredients
+      responses:
+        '200':
+          description: Recipe Ingredient found
+          content:
+            application/json:
+              example:
+                id: 5
+                amount: 0.5
+                unit: TEASPOON
+                ingredient_id: 5
+                recipe_id: 1
+        '400':
+          description: >-
+            Cannot find ingredient with id {recipe_ingredient} in recipe with id
+            {recipe}: list index out of range
+    put:
+      summary: Update an recipe ingredient
+      tags:
+        - recipe ingredients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeIngredient'
+            example:
+              amount: 100
+              unit: GRAMS
+              ingredient_id: 14
+      responses:
+        '204':
+          description: Recipe Ingredient updated
+        '400':
+          description: Invalid request body
+        '409':
+          description: Recipe Ingredient with name {name} already exists
+        '415':
+          description: Unsupported media type
+    delete:
+      description: Removes an recipe ingredient
+      summary: Removes an recipe ingredient item
+      tags:
+        - recipe ingredients
+      responses:
+        '204':
+          description: No content
+  /ingredients/:
+    get:
+      summary: List of all ingredients
+      description: Retrieves a collection of all the available ingredients
+      tags:
+        - ingredients
+      responses:
+        '200':
+          description: An array list of ingredients
+          content:
+            application/json:
+              examples:
+                recipe-list:
+                  description: A list containing ingredients
+                  value:
+                    items:
+                      - ingredient_id: 22
+                        name: Black Pepper
+                      - ingredient_id: 5
+                        name: Butter
+                      - ingredient_id: 12
+                        name: Carrot
+                      - ingredient_id: 2
+                        name: Egg
+                empty-list:
+                  description: list without ingredients
+                  value:
+                    items: []
+        '400':
+          description: Cannot find any ingredients
+    post:
+      summary: Add a new ingredient
+      tags:
+        - ingredients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+            example:
+              name: Red Cabbage
+      responses:
+        '201':
+          description: Ingredient created
+        '400':
+          description: Invalid request body
+        '409':
+          description: Ingredient with the name '{name}' already exists
+        '415':
+          description: Unsupported media type
+  /ingredients/{ingredient}:
+    parameters:
+      - $ref: '#/components/parameters/ingredient'
+    get:
+      description: Retrieve an ingredient with the given id
+      summary: Find an ingredient
+      tags:
+        - ingredients
+      responses:
+        '200':
+          description: Ingredient found
+          content:
+            application/json:
+              example:
+                ingredient_id: 6
+                name: Salt
+        '400':
+          description: >-
+            Cannot find ingredient with given id {ingredient}: list index out of
+            range
+    put:
+      summary: Update an ingredient
+      tags:
+        - ingredients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+            example:
+              name: Vinegar
+      responses:
+        '204':
+          description: Ingredient updated
+        '400':
+          description: Invalid request body
+        '409':
+          description: Ingredient with name {name} already exists
+        '415':
+          description: Unsupported media type
+    delete:
+      description: Removes an ingredient
+      summary: Removes an ingredient item
+      tags:
+        - ingredients
+      responses:
+        '204':
+          description: No content
+  /cookbooks/{cookbook}/recipes:
+    parameters:
+      - $ref: '#/components/parameters/cookbook'
+    get:
+      summary: List of all cookbook-recipe relations
+      description: >-
+        Retrieves a collection of the all cookbook and recipe
+        relations/connections
+      tags:
+        - cookbooks and recipes
+      responses:
+        '200':
+          description: An array list of cookbook-recipe relations
+          content:
+            application/json:
+              examples:
+                cookbook-recipe-list:
+                  description: A list containing cookbook-recipe relations
+                  value:
+                    items:
+                      - recipe_id: 12
+                        cookbook_id: 2
+                      - recipe_id: 3
+                        cookbook_id: 2
+                      - recipe_id: 12
+                        cookbook_id: 5
+                      - recipe_id: 4
+                        cookbook_id: 6
+                      - recipe_id: 10
+                        cookbook_id: 6
+                      - recipe_id: 5
+                        cookbook_id: 1
+                empty-list:
+                  description: list without cookbook-recipe relations
+                  value:
+                    items: []
+        '400':
+          description: Cannot find any connected cookbooks and recipes
+    post:
+      summary: Create a new cookbook-recipe relation
+      tags:
+        - cookbooks and recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CookbookRecipes'
+            example:
+              recipe_id: 3
+              cookbook_id: 5
+      responses:
+        '201':
+          description: Recipe {recipe} has been added to Cookbook {cookbook}
+        '400':
+          description: Invalid request body
+        '409':
+          description: >-
+            Recipe with id '{recipe}' already exists in Cookbook with id
+            {cookbook}
+        '415':
+          description: Unsupported media type
+  /cookbooks/{cookbook}/recipes/{recipe}:
+    parameters:
+      - $ref: '#/components/parameters/cookbook'
+      - $ref: '#/components/parameters/recipe'
+    get:
+      description: Retrieve a cookbook-recipe relation
+      summary: Find a cookbook-recipe relation with the given cookbook and recipe ids
+      tags:
+        - cookbooks and recipes
+      responses:
+        '200':
+          description: Relation found
+          content:
+            application/json:
+              example:
+                recipe_id: 2
+                cookbook_id: 5
+        '400':
+          description: >-
+            Cannot find recipe with id {recipe} in cookbook with id {cookbook}:
+            list index out of range
+    delete:
+      description: Removes a cookbook-recipe relation
+      summary: Removes a cookbook-recipe relation
+      tags:
+        - cookbooks and recipes
+      responses:
+        '204':
+          description: No content

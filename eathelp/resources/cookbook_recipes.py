@@ -4,7 +4,7 @@ from flask_restful import Resource
 import json
 from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
-from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
+from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict, BadRequestKeyError
 
 from eathelp.db.load_database import db_connection_mysql
 from eathelp.models import CookbookRecipes
@@ -22,36 +22,22 @@ class CookbookRecipesItem(Resource):
     def get(self, cookbook, recipe):
         conn = db_connection_mysql()
         cursor = conn.cursor()
-        sql = """SELECT r.* FROM recipe r JOIN cookbook_recipes cr ON r.recipe_id = cr.recipe_id
-        WHERE r.recipe_id = """ + str(recipe) + """ AND cr.cookbook_id = """ + str(cookbook)
-        cursor.execute(sql)
-        cb_recipes = cursor.fetchall()
-        body = parse_row(cb_recipes[0]).serialize(short_form=False)
-        return Response(json.dumps(body), 200, mimetype=JSON)
-
-    def put(self, cookbook, recipe):
-        conn = db_connection_mysql()
-        cursor = conn.cursor()
-        if not request.json:
-            raise UnsupportedMediaType
         try:
-            validate(request.json, CookbookRecipes.json_schema())
-        except ValidationError as e:
-            raise BadRequest(description=str(e))
-        cbr = CookbookRecipes()
-        cbr.deserialize(request.json)
-        try:
-            sql = """UPDATE cookbook_recipes SET cookbook_id = %s, recipe_id = %s 
-            WHERE cookbook_id = """ + str(cookbook) + """ AND recipe_id = """ + str(recipe)
-            cursor.execute(sql, (cbr.cookbook_id, cbr.recipe_id))
-            conn.commit()
-        except IntegrityError:
-            raise Conflict(
-                "Recipe with id '{recipe}' already exists in Cookbook with id '{cookbook}'.".format(
-                    **request.json
-                )
+            sql = """SELECT * FROM cookbook_recipes
+                    WHERE recipe_id = """ + str(recipe) + """ AND cookbook_id = """ + str(cookbook)
+            ### Version 2 = More complex query to show more data:
+            # sql = """SELECT c.cookbook_id, c.name, r.recipe_id, r.recipe_name
+            # FROM recipe r JOIN cookbook_recipes cr ON r.recipe_id = cr.recipe_id
+            # JOIN cookbook c ON c.cookbook_id = cr.cookbook_id
+            # WHERE r.recipe_id = """ + str(recipe) + """ AND cr.cookbook_id = """ + str(cookbook)
+            cursor.execute(sql)
+            cb_recipes = cursor.fetchall()
+            body = parse_row(cb_recipes[0]).serialize()
+        except IndexError as e:
+            raise BadRequestKeyError(
+                description="Cannot find recipe with id {recipe} in cookbook with id {cookbook}: " + str(e)
             )
-        return Response(status=204)
+        return Response(json.dumps(body), 200, mimetype=JSON)
 
     def delete(self, cookbook, recipe):
         conn = db_connection_mysql()

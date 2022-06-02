@@ -4,7 +4,7 @@ from flask_restful import Resource
 import json
 from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
-from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
+from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict, BadRequestKeyError
 
 from eathelp.db.load_database import db_connection_mysql
 from eathelp.models import Cookbook
@@ -25,9 +25,14 @@ class CookbookItem(Resource):
         conn = db_connection_mysql()
         cursor = conn.cursor()
         sql = "SELECT * FROM cookbook WHERE user_id=" + str(chef) + " AND cookbook_id=" + str(cookbook)
-        cursor.execute(sql)
-        cookbooks = cursor.fetchall()
-        body = parse_row(cookbooks[0]).serialize(short_form=False)
+        try:
+            cursor.execute(sql)
+            cookbooks = cursor.fetchall()
+            body = parse_row(cookbooks[0]).serialize(short_form=False)
+        except IndexError as e:
+            raise BadRequestKeyError(
+                description="Cannot find a cookbook from chef: " + str(e)
+            )
         return Response(json.dumps(body), 200, mimetype=JSON)
 
     def put(self, chef, cookbook):

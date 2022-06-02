@@ -1,10 +1,11 @@
+import werkzeug.exceptions
 from flask import Flask, Response, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Resource
 import json
 from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
-from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
+from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict, BadRequestKeyError
 
 from eathelp import cache, api
 from eathelp.db.load_database import db_connection_mysql
@@ -25,9 +26,14 @@ class UserItem(Resource):
         conn = db_connection_mysql()
         cursor = conn.cursor()
         sql = "SELECT * FROM user WHERE user_id=" + str(chef)
-        cursor.execute(sql)
-        chefs = cursor.fetchall()
-        body = parse_row(chefs[0]).serialize()
+        try:
+            cursor.execute(sql)
+            chefs = cursor.fetchall()
+            body = parse_row(chefs[0]).serialize()
+        except IndexError as e:
+            raise BadRequestKeyError(
+                description="Cannot find chef with given id {" + str(chef) + "}: " + str(e)
+            )
         return Response(json.dumps(body), 200, mimetype=JSON)
 
     def put(self, chef):

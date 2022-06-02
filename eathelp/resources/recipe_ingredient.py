@@ -4,7 +4,7 @@ from flask_restful import Resource
 import json
 from jsonschema import validate, ValidationError, draft7_format_checker
 from pymysql import IntegrityError
-from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict
+from werkzeug.exceptions import UnsupportedMediaType, BadRequest, Conflict, BadRequestKeyError
 
 from eathelp.db.load_database import db_connection_mysql
 from eathelp.models import RecipeIngredient
@@ -27,9 +27,14 @@ class RecipeIngredientItem(Resource):
         conn = db_connection_mysql()
         cursor = conn.cursor()
         sql = "SELECT * FROM recipe_ingredient WHERE rec_ing_id=" + str(r_ingredient) + " AND recipe_id=" + str(recipe)
-        cursor.execute(sql)
-        recipe_ingredients = cursor.fetchall()
-        body = parse_row(recipe_ingredients[0]).serialize(short_form=False)
+        try:
+            cursor.execute(sql)
+            recipe_ingredients = cursor.fetchall()
+            body = parse_row(recipe_ingredients[0]).serialize(short_form=False)
+        except IndexError as e:
+            raise BadRequestKeyError(
+                description="Cannot find ingredient with id {recipe_ingredient} in recipe with id {recipe}: " + str(e)
+            )
         return Response(json.dumps(body), 200, mimetype=JSON)
 
     def put(self, recipe, r_ingredient):
