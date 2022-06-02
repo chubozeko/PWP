@@ -18,6 +18,6 @@ def home_documentation():
 
 @app.route("/favicon.ico")
 def favicon():
-    return "<h1>EatHelp API: favicon.ico</h1> ", 200
+    return "<h1>EatHelp API: favicon.ico</h1> ", 200 
 
 
