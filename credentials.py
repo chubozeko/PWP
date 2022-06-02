@@ -11,10 +11,10 @@
 
 def get_db_credentials():
     return {
-        "user": "",
-        "password": "",
-        "host": "",
-        "port": "",
-        "database_name": "pwp_db",
-        "query_params": ""
+        "user": "b051e6fbeb1906",
+        "password": "0d656e0b",
+        "host": "eu-cdbr-west-02.cleardb.net",
+        "port": "3306",
+        "database_name": "heroku_5fc161546536f99",
+        "query_params": "?reconnect=true"
     }
