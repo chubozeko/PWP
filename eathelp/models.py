@@ -1,13 +1,30 @@
+##
+#   This code was developed by the EatHelp API team,
+#       with some code references from the following resources:
+#
+# - Code from PWP Lectures and Exercises:
+#   (https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-spring-2022/)
+# - Python REST API Tutorial - Building a Flask REST API
+#   (https://www.youtube.com/watch?v=GMppyAPbLYk)
+# - Build Modern APIs using Flask (playlist)
+#   (https://www.youtube.com/playlist?list=PLMOobVGrchXN5tKYdyx-d2OwwgxJuqDVH)
+#
+#   MIT License. 2022 (c) All Rights Reserved.
+##
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, nullable=False)
     username = db.Column(db.String(255), unique=True, nullable=False)
 
-    cookbooks = db.relationship("Cookbook", cascade="all, delete-orphan", back_populates="user")
-    recipes = db.relationship("Recipe", cascade="all, delete-orphan", back_populates="user")
+    cookbooks = db.relationship(
+        "Cookbook", cascade="all, delete-orphan", back_populates="user")
+    recipes = db.relationship(
+        "Recipe", cascade="all, delete-orphan", back_populates="user")
 
     def serialize(self):
         return {
@@ -31,11 +48,14 @@ class User(db.Model):
         }
         return schema
 
+
 class Ingredient(db.Model):
     ingredient_id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(255), nullable=False, unique=True)
 
-    recipe_ingredients = db.relationship("RecipeIngredient", cascade="all, delete-orphan", back_populates="ingredient")
+    recipe_ingredients = db.relationship(
+        "RecipeIngredient",
+        cascade="all, delete-orphan", back_populates="ingredient")
 
     def serialize(self):
         return {
@@ -59,6 +79,7 @@ class Ingredient(db.Model):
         }
         return schema
 
+
 class Recipe(db.Model):
     recipe_id = db.Column(db.Integer, primary_key=True)
     recipe_name = db.Column(db.String(50), nullable=False, unique=True)
@@ -69,18 +90,23 @@ class Recipe(db.Model):
     calories = db.Column(db.Integer, nullable=False)
     servings = db.Column(db.Integer, nullable=False)
     instructions = db.Column(db.String(2000), nullable=False)
-    creator_id = db.Column(db.Integer, db.ForeignKey("user.user_id", ondelete="SET NULL"))
+    creator_id = db.Column(db.Integer,
+                           db.ForeignKey("user.user_id", ondelete="SET NULL"))
 
     user = db.relationship("User", back_populates="recipes")
-    ingredients = db.relationship("RecipeIngredient", cascade="all, delete-orphan", back_populates="recipe")
-    recipe_collection = db.relationship("CookbookRecipes", cascade="all, delete-orphan", back_populates="recipe")
+    ingredients = db.relationship("RecipeIngredient",
+                                  cascade="all, delete-orphan",
+                                  back_populates="recipe")
+    recipe_collection = db.relationship("CookbookRecipes",
+                                        cascade="all, delete-orphan",
+                                        back_populates="recipe")
 
     def serialize(self, short_form=False):
         doc = {
             "recipe_id": self.recipe_id,
             "recipe_name": self.recipe_name,
             "description": self.description,
-            "creator_id": self.creator_id # and self.user.serialize()
+            "creator_id": self.creator_id  # and self.user.serialize()
         }
         if not short_form:
             doc["prep_time"] = self.prep_time
@@ -151,17 +177,25 @@ class Recipe(db.Model):
         }
         return schema
 
+
 class RecipeIngredient(db.Model):
-    __table_args__ = (db.UniqueConstraint("recipe_id", "ingredient_id", name="_ingredient_in_recipe_uc"),)
+    __table_args__ = (db.UniqueConstraint("recipe_id",
+                                          "ingredient_id",
+                                          name="_ingredient_in_recipe_uc"),)
 
     rec_ing_id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.recipe_id", ondelete="SET NULL"))
-    ingredient_id = db.Column(db.Integer, db.ForeignKey("ingredient.ingredient_id", ondelete="SET NULL"))
+    recipe_id = db.Column(db.Integer,
+                          db.ForeignKey("recipe.recipe_id",
+                                        ondelete="SET NULL"))
+    ingredient_id = db.Column(db.Integer,
+                              db.ForeignKey("ingredient.ingredient_id",
+                                            ondelete="SET NULL"))
     amount = db.Column(db.Float, nullable=False)
     unit = db.Column(db.String(255), nullable=False)
 
     recipe = db.relationship("Recipe", back_populates="ingredients")
-    ingredient = db.relationship("Ingredient", back_populates="recipe_ingredients")
+    ingredient = db.relationship("Ingredient",
+                                 back_populates="recipe_ingredients")
 
     def serialize(self, short_form=False):
         return {
@@ -170,9 +204,6 @@ class RecipeIngredient(db.Model):
             "unit": self.unit,
             "ingredient_id": self.ingredient_id,
             "recipe_id": self.recipe_id,
-            # "name": self.ingredient and self.ingredient.serialize(short_form=short_form),
-            # "ingredient": self.ingredient and self.ingredient.serialize(short_form=short_form),
-            # "recipe": self.recipe and self.recipe.serialize(short_form=short_form)
         }
 
     def deserialize(self, doc):
@@ -206,16 +237,21 @@ class RecipeIngredient(db.Model):
         }
         return schema
 
+
 class Cookbook(db.Model):
-    __table_args__ = (db.UniqueConstraint("name", "user_id", name="_user_cb_name_uc"),)
+    __table_args__ = (db.UniqueConstraint("name", "user_id",
+                                          name="_user_cb_name_uc"),)
 
     cookbook_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(200), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id", ondelete="SET NULL"))
+    user_id = db.Column(db.Integer,
+                        db.ForeignKey("user.user_id", ondelete="SET NULL"))
 
     user = db.relationship("User", back_populates="cookbooks")
-    recipe_collection = db.relationship("CookbookRecipes", cascade="all, delete-orphan", back_populates="cookbook")
+    recipe_collection = db.relationship("CookbookRecipes",
+                                        cascade="all, delete-orphan",
+                                        back_populates="cookbook")
 
     def serialize(self, short_form=False):
         doc = {
@@ -253,12 +289,15 @@ class Cookbook(db.Model):
         # }
         return schema
 
+
 class CookbookRecipes(db.Model):
     __tablename__ = "cookbook_recipes"
 
     col_id = db.Column(db.Integer, primary_key=True)
-    cookbook_id = db.Column(db.Integer, db.ForeignKey("cookbook.cookbook_id", ondelete="CASCADE"))
-    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.recipe_id", ondelete="CASCADE"))
+    cookbook_id = db.Column(db.Integer, db.ForeignKey("cookbook.cookbook_id",
+                                                      ondelete="CASCADE"))
+    recipe_id = db.Column(db.Integer, db.ForeignKey("recipe.recipe_id",
+                                                    ondelete="CASCADE"))
 
     cookbook = db.relationship("Cookbook", back_populates="recipe_collection")
     recipe = db.relationship("Recipe", back_populates="recipe_collection")
@@ -289,4 +328,3 @@ class CookbookRecipes(db.Model):
             "type": "number"
         }
         return schema
-

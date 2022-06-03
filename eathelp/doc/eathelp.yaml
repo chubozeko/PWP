@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: EatHelp API Documentation
-  version: 0.0.2
+  version: 0.0.3
   description: >
     EatHelp API provides an interface for people to manage cookbooks, recipes
     and ingredients. 
@@ -193,7 +193,7 @@ paths:
                   value:
                     items: []
         '404':
-          description: Unable to retrieve chefs
+          description: Unable to retrieve any chefs
     post:
       summary: Add a new chef
       tags:
@@ -701,7 +701,7 @@ paths:
             Cannot find ingredient with id {recipe_ingredient} in recipe with id
             {recipe}: list index out of range
     put:
-      summary: Update an recipe ingredient
+      summary: Update a recipe ingredient
       tags:
         - recipe ingredients
       requestBody:
@@ -723,8 +723,8 @@ paths:
         '415':
           description: Unsupported media type
     delete:
-      description: Removes an recipe ingredient
-      summary: Removes an recipe ingredient item
+      description: Removes a recipe ingredient
+      summary: Removes a recipe ingredient item
       tags:
         - recipe ingredients
       responses:

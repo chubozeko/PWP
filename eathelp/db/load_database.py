@@ -1,7 +1,22 @@
+##
+#   This code was developed by the EatHelp API team,
+#       with some code references from the following resources:
+#
+# - Code from PWP Lectures and Exercises:
+#   (https://lovelace.oulu.fi/ohjelmoitava-web/programmable-web-project-spring-2022/)
+# - Python REST API Tutorial - Building a Flask REST API
+#   (https://www.youtube.com/watch?v=GMppyAPbLYk)
+# - Build Modern APIs using Flask (playlist)
+#   (https://www.youtube.com/playlist?list=PLMOobVGrchXN5tKYdyx-d2OwwgxJuqDVH)
+#
+#   MIT License. 2022 (c) All Rights Reserved.
+##
+
 import mysql.connector
 from pymysql import Error
 
 from credentials import get_db_credentials
+
 
 def db_connection_mysql(init_db=False):
     conn = None
@@ -15,6 +30,7 @@ def db_connection_mysql(init_db=False):
     except Exception as e:
         print('Exception: ', e)
     return conn
+
 
 def initialize_db_cursor(conn):
     try:
@@ -36,10 +52,10 @@ class MySQLDatabase:
         # Connect to MySQL database
         try:
             conn = mysql.connector.connect(
-                host = self.credentials['host'],
-                port = str(self.credentials['port']),
-                user = self.credentials['user'],
-                passwd = self.credentials['password']
+                host=self.credentials['host'],
+                port=str(self.credentials['port']),
+                user=self.credentials['user'],
+                passwd=self.credentials['password']
             )
         except Error as e:
             print('Error: ', e)
@@ -56,11 +72,15 @@ class MySQLDatabase:
         if init_db:
             self.executeSql('eathelp/db/pwp_db_create.sql', db_cursor)
             connection.commit()
-            print(" * Database '" + get_db_credentials()["database_name"] + "' created!")
+            print(
+                " * Database '" + get_db_credentials()["database_name"] +
+                "' created!")
             db_cursor.execute("SET foreign_key_checks = 1;")
             self.executeSql('eathelp/db/pwp_db_insert.sql', db_cursor)
             connection.commit()
-            print(" * Database '" + get_db_credentials()["database_name"] + "' populated!")
+            print(
+                " * Database '" + get_db_credentials()["database_name"] +
+                "' populated!")
 
     def executeSql(self, sqlFile, db_cursor):
         fd = open(sqlFile, 'r')
